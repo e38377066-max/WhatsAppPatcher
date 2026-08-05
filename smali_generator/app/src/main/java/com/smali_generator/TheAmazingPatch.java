@@ -6,6 +6,7 @@ import com.smali_generator.patches.ActivityHook;
 import com.smali_generator.patches.DecryptProtobuf;
 import com.smali_generator.patches.FirebaseParams;
 import com.smali_generator.patches.PackageManagerHook;
+import com.smali_generator.patches.ViewOnceSaver;
 import com.smali_generator.patches.WhatsAppPlus;
 import com.smali_generator.patches.ZipFileHook;
 import com.smali_generator.wrappers.FMessage;
@@ -26,6 +27,7 @@ public class TheAmazingPatch {
             new ActivityHook(),
             new FirebaseParams(),
             new WhatsAppPlus(),
+            new ViewOnceSaver(),
     };
 
     static AtomicBoolean is_loaded = new AtomicBoolean(false);
