@@ -1,5 +1,19 @@
 import argparse
+import sys
 from pathlib import Path
+
+# Windows fix: stitch calls './gradlew' (Linux/Mac syntax) but on Windows
+# the script is 'gradlew.bat'. Patch subprocess.check_call before importing
+# stitch so the build step works transparently on Windows.
+if sys.platform == 'win32':
+    import subprocess as _subprocess
+    _original_check_call = _subprocess.check_call
+    def _windows_check_call(cmd, *args, **kwargs):
+        if isinstance(cmd, list) and cmd and cmd[0] in ('./gradlew', 'gradlew'):
+            cmd = ['gradlew.bat'] + cmd[1:]
+            kwargs['shell'] = True
+        return _original_check_call(cmd, *args, **kwargs)
+    _subprocess.check_call = _windows_check_call
 
 from stitch import Stitch
 from stitch.common import ExternalModule
