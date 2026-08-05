@@ -1,5 +1,5 @@
 [versions]
-agp = "8.7.0"
+agp = "8.7.3"
 annotationJvm = "1.9.1"
 arthooks = "1.0.3"
 [libraries]
