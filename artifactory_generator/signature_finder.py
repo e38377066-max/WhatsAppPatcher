@@ -67,7 +67,12 @@ class SignatureFinder(SimpleArtifactoryFinder):
                     'The APK may be unsigned or use an unsupported signing scheme.'
                 )
 
-            bytes_signature = cert.public_bytes(serialization.Encoding.DER)
+            # androguard returns asn1crypto certificates (.dump() → DER bytes)
+            # but newer versions may return cryptography.x509 (.public_bytes() → DER).
+            if hasattr(cert, 'dump'):
+                bytes_signature = cert.dump()
+            else:
+                bytes_signature = cert.public_bytes(serialization.Encoding.DER)
 
         # Convert DER bytes → lowercase hex string (what Android expects)
         artifacts['PACKAGE_SIGNATURE'] = ''.join(f'{b:02x}' for b in bytes_signature)
