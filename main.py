@@ -5,12 +5,53 @@ from pathlib import Path
 # Windows fix: stitch calls './gradlew' (Linux/Mac syntax). On Windows we
 # prefer the system-installed 'gradle' (no wrapper download needed), and fall
 # back to 'gradlew.bat' if the system gradle is not on PATH.
+# Also auto-creates local.properties with the Android SDK path so Gradle can
+# find it without needing ANDROID_HOME set manually.
 if sys.platform == 'win32':
+    import os as _os
     import shutil as _shutil
     import subprocess as _subprocess
+
+    def _find_android_sdk():
+        """Try to locate the Android SDK on this Windows machine."""
+        # Explicit env variables first
+        for var in ('ANDROID_HOME', 'ANDROID_SDK_ROOT'):
+            path = _os.environ.get(var, '')
+            if path and _os.path.isdir(path):
+                return path
+        # Common install locations (Android Studio, Unity, standalone SDK)
+        local = _os.environ.get('LOCALAPPDATA', '')
+        user  = _os.environ.get('USERPROFILE', '')
+        candidates = [
+            _os.path.join(local, 'Android', 'Sdk'),
+            _os.path.join(local, 'Android', 'android-sdk'),
+            _os.path.join(user,  'AppData', 'Local', 'Android', 'Sdk'),
+            'C:\\Android\\Sdk',
+            'D:\\Android\\Sdk',
+        ]
+        for p in candidates:
+            if _os.path.isdir(p):
+                return p
+        return None
+
     _original_check_call = _subprocess.check_call
     def _windows_check_call(cmd, *args, **kwargs):
         if isinstance(cmd, list) and cmd and cmd[0] in ('./gradlew', 'gradlew'):
+            # Write local.properties with sdk.dir so AGP can find the SDK
+            cwd = kwargs.get('cwd', '')
+            if cwd:
+                local_props = _os.path.join(str(cwd), 'local.properties')
+                if not _os.path.exists(local_props):
+                    sdk_path = _find_android_sdk()
+                    if sdk_path:
+                        # Gradle requires forward slashes in sdk.dir
+                        sdk_path_fwd = sdk_path.replace('\\', '/')
+                        with open(local_props, 'w') as _f:
+                            _f.write(f'sdk.dir={sdk_path_fwd}\n')
+                        print(f'[+] Android SDK found at: {sdk_path}')
+                    else:
+                        print('[!] Android SDK not found. Install Android Studio or set ANDROID_HOME.')
+            # Use system gradle (avoids wrapper download) or fall back to gradlew.bat
             if _shutil.which('gradle'):
                 cmd = ['gradle'] + cmd[1:]
             else:
