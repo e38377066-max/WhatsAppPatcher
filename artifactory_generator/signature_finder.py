@@ -19,8 +19,19 @@ class SignatureFinder(SimpleArtifactoryFinder):
         return True
 
     def extract_artifacts(self, artifacts: dict, class_data: str) -> None:
-        dsa_pattern = str(Path(self.args.temp_path) / EXTRACTED_PATH / 'unknown' / 'META-INF' / '*.DSA')
-        signature_file = glob.glob(dsa_pattern)[0]
+        meta_inf = Path(self.args.temp_path) / EXTRACTED_PATH / 'unknown' / 'META-INF'
+        signature_file = None
+        for ext in ('*.DSA', '*.RSA', '*.EC'):
+            matches = glob.glob(str(meta_inf / ext))
+            if matches:
+                signature_file = matches[0]
+                break
+        if signature_file is None:
+            raise FileNotFoundError(
+                f'No signature file (.DSA/.RSA/.EC) found in {meta_inf}. '
+                'Make sure the APK is a valid signed WhatsApp build.'
+            )
+        signature_file = signature_file  # reassign for clarity below
         print(f'[+] Found signature file: {signature_file}')
         with open(signature_file, "rb") as f:
             public_key = f.read()
