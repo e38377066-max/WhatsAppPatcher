@@ -34,6 +34,16 @@ if sys.platform == 'win32':
                 return p
         return None
 
+    def _find_zipalign(sdk_path):
+        """Return the path to zipalign.exe inside the Android SDK build-tools."""
+        import glob as _glob
+        build_tools = _os.path.join(sdk_path, 'build-tools')
+        if not _os.path.isdir(build_tools):
+            return None
+        # Pick the highest available build-tools version
+        candidates = sorted(_glob.glob(_os.path.join(build_tools, '*', 'zipalign.exe')), reverse=True)
+        return candidates[0] if candidates else None
+
     _original_check_call = _subprocess.check_call
     def _windows_check_call(cmd, *args, **kwargs):
         if isinstance(cmd, list) and cmd and cmd[0] in ('./gradlew', 'gradlew'):
@@ -57,6 +67,20 @@ if sys.platform == 'win32':
             else:
                 cmd = ['gradlew.bat'] + cmd[1:]
             kwargs['shell'] = True
+
+        elif isinstance(cmd, list) and len(cmd) >= 3 and cmd[0] == 'java' and '--apks' in cmd:
+            # uber-apk-signer call: inject --zipalign from the SDK so Windows
+            # doesn't block the embedded zipalign.exe that it extracts to %TEMP%.
+            if '--zipalign' not in cmd:
+                sdk_path = _find_android_sdk()
+                if sdk_path:
+                    zipalign = _find_zipalign(sdk_path)
+                    if zipalign:
+                        print(f'[+] Using zipalign: {zipalign}')
+                        # Insert right before --apks so uber-apk-signer picks it up
+                        idx = cmd.index('--apks')
+                        cmd = cmd[:idx] + ['--zipalign', zipalign] + cmd[idx:]
+
         return _original_check_call(cmd, *args, **kwargs)
     _subprocess.check_call = _windows_check_call
 
