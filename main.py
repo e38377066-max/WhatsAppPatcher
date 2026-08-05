@@ -194,7 +194,9 @@ def _merge_bundle_to_single_apk(bundle_zip_path: Path, temp_path: Path) -> None:
     bundle_zip_path.unlink()
     import shutil as _shutil_merge2
     _shutil_merge2.move(str(signed_path), str(bundle_zip_path))
-    _shutil_merge2.rmtree(merge_dir, ignore_errors=True)
+    # Clean up the whole temp tree so the next run doesn't hit
+    # "The temp path already exists" from stitch's startup check.
+    _shutil_merge2.rmtree(temp_path, ignore_errors=True)
     print(f'[+] Single APK ready: {bundle_zip_path}')
 
 
