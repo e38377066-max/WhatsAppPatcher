@@ -2,15 +2,19 @@ import argparse
 import sys
 from pathlib import Path
 
-# Windows fix: stitch calls './gradlew' (Linux/Mac syntax) but on Windows
-# the script is 'gradlew.bat'. Patch subprocess.check_call before importing
-# stitch so the build step works transparently on Windows.
+# Windows fix: stitch calls './gradlew' (Linux/Mac syntax). On Windows we
+# prefer the system-installed 'gradle' (no wrapper download needed), and fall
+# back to 'gradlew.bat' if the system gradle is not on PATH.
 if sys.platform == 'win32':
+    import shutil as _shutil
     import subprocess as _subprocess
     _original_check_call = _subprocess.check_call
     def _windows_check_call(cmd, *args, **kwargs):
         if isinstance(cmd, list) and cmd and cmd[0] in ('./gradlew', 'gradlew'):
-            cmd = ['gradlew.bat'] + cmd[1:]
+            if _shutil.which('gradle'):
+                cmd = ['gradle'] + cmd[1:]
+            else:
+                cmd = ['gradlew.bat'] + cmd[1:]
             kwargs['shell'] = True
         return _original_check_call(cmd, *args, **kwargs)
     _subprocess.check_call = _windows_check_call
