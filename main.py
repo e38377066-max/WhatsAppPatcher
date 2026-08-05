@@ -68,6 +68,13 @@ if sys.platform == 'win32':
                 cmd = ['gradlew.bat'] + cmd[1:]
             kwargs['shell'] = True
 
+        elif isinstance(cmd, list) and len(cmd) >= 3 and cmd[0] == 'java' and '-jar' in cmd and '--apks' not in cmd:
+            # apktool / any java -jar call: cap heap at 1 GB so the JVM doesn't
+            # exhaust native OS memory on large APKs like WhatsApp (130 MB+).
+            if not any(a.startswith('-Xmx') for a in cmd):
+                jar_idx = cmd.index('-jar')
+                cmd = cmd[:jar_idx] + ['-Xmx1g', '-Xss256k'] + cmd[jar_idx:]
+
         elif isinstance(cmd, list) and len(cmd) >= 3 and cmd[0] == 'java' and '--apks' in cmd:
             # uber-apk-signer call: inject --zipAlignPath from the SDK so Windows
             # doesn't block the embedded zipalign.exe that it extracts to %TEMP%.
