@@ -19,27 +19,11 @@ public class DecryptProtobuf implements Hook {
     public static Object default_instance;
 
     static void handle_view_once(Object obj) {
-        try {
-            for (Field field : obj.getClass().getDeclaredFields()) {
-                Object value = field.get(obj);
-                if (value == null) {
-                    continue;
-                }
-                try {
-                    Field view_once_field = value.getClass().getDeclaredField("viewOnce_");
-                    view_once_field.setAccessible(true);
-                    boolean is_view_once = (boolean) view_once_field.get(value);
-                    if (is_view_once) {
-                        view_once_field.set(value, false);
-                    }
-                } catch (NoSuchFieldException ignored) {
-                } catch (Exception e) {
-                    Log.e("PATCH", "DecryptProtobuf: Error: " + e.getMessage());
-                }
-            }
-        } catch (Exception e) {
-            Log.e("PATCH", "DecryptProtobuf: Error: " + e.getMessage());
-        }
+        // Intentionally left empty: we no longer alter the viewOnce_ flag so
+        // WhatsApp's UI behaves exactly as normal (the message shows as opened
+        // and cannot be reopened from the chat).
+        // The actual media file is saved silently by ViewOnceSaver, which
+        // intercepts File.delete() before WhatsApp erases it.
     }
 
     static void handle_delete_message(Object base_message, Object protocol_message) {

@@ -1,5 +1,5 @@
 androguard~=4.1.4
 lxml~=5.3.1
-cryptography~=44.0.2
+cryptography
 requests~=2.32.3
 stitch
