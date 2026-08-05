@@ -9,8 +9,11 @@ import com.arthooks.ArtHooks;
 import com.smali_generator.Hook;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -99,7 +102,7 @@ public class DeletedMessageSaver implements Hook {
             cursor = db.query(
                     "message",
                     new String[]{"key_remote_jid", "key_from_me",
-                            "timestamp", "data", "media_name"},
+                            "timestamp", "data", "media_name", "media_url"},
                     whereClause,
                     whereArgs,
                     null, null,
@@ -117,18 +120,33 @@ public class DeletedMessageSaver implements Hook {
             int colTimestamp = safeColumn(cursor, "timestamp");
             int colData      = safeColumn(cursor, "data");
             int colMedia     = safeColumn(cursor, "media_name");
+            int colMediaUrl  = safeColumn(cursor, "media_url");
 
             SimpleDateFormat sdf =
                     new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
 
+            // Resolve save directory once for the whole batch
+            File sdcard  = Environment.getExternalStorageDirectory();
+            File saveDir = new File(sdcard, SAVE_SUBDIR);
+            if (!saveDir.exists()) {
+                saveDir.mkdirs();
+                new File(saveDir, ".nomedia").createNewFile();
+            }
+
             while (cursor.moveToNext()) {
-                String jid      = colJid       >= 0 ? cursor.getString(colJid)       : "?";
-                int    fromMe   = colFromMe    >= 0 ? cursor.getInt(colFromMe)        : 0;
-                long   ts       = colTimestamp >= 0 ? cursor.getLong(colTimestamp)    : 0;
-                String text     = colData      >= 0 ? cursor.getString(colData)       : null;
-                String media    = colMedia     >= 0 ? cursor.getString(colMedia)      : null;
+                String jid       = colJid       >= 0 ? cursor.getString(colJid)       : "?";
+                int    fromMe    = colFromMe    >= 0 ? cursor.getInt(colFromMe)        : 0;
+                long   ts        = colTimestamp >= 0 ? cursor.getLong(colTimestamp)    : 0;
+                String text      = colData      >= 0 ? cursor.getString(colData)       : null;
+                String media     = colMedia     >= 0 ? cursor.getString(colMedia)      : null;
+                String mediaUrl  = colMediaUrl  >= 0 ? cursor.getString(colMediaUrl)   : null;
 
                 if (chatJid == null && jid != null) chatJid = jid;
+
+                // Try to copy the media file before WhatsApp deletes it
+                if (mediaUrl != null && !mediaUrl.isEmpty()) {
+                    copyMediaFile(mediaUrl, saveDir, ts);
+                }
 
                 // Determine display content
                 String content;
@@ -152,7 +170,7 @@ public class DeletedMessageSaver implements Hook {
 
             if (sb.length() == 0) return;
 
-            writeToFile(sb.toString(), chatJid);
+            writeToFile(sb.toString(), chatJid, saveDir);
 
         } catch (Exception e) {
             Log.e(TAG, "DeletedMessageSaver: query error: " + e.getMessage());
@@ -170,16 +188,12 @@ public class DeletedMessageSaver implements Hook {
         }
     }
 
-    /** Appends or creates a text file in the hidden folder. */
-    static void writeToFile(String content, String chatJid) {
+    /**
+     * Writes the text log to a new .txt file in saveDir.
+     * saveDir is assumed to already exist (created in saveMessages).
+     */
+    static void writeToFile(String content, String chatJid, File saveDir) {
         try {
-            File sdcard = Environment.getExternalStorageDirectory();
-            File saveDir = new File(sdcard, SAVE_SUBDIR);
-            if (!saveDir.exists()) {
-                saveDir.mkdirs();
-                new File(saveDir, ".nomedia").createNewFile();
-            }
-
             // Use contact name as part of the filename (strip domain)
             String contact = "chat";
             if (chatJid != null && !chatJid.isEmpty()) {
@@ -198,6 +212,48 @@ public class DeletedMessageSaver implements Hook {
 
         } catch (IOException e) {
             Log.e(TAG, "DeletedMessageSaver: write error: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Copies a media file referenced by mediaUrl (local filesystem path stored
+     * in the WhatsApp DB) into saveDir.  The destination filename is prefixed
+     * with a millisecond timestamp so multiple files never collide.
+     *
+     * Silently skips if the source does not exist or is not readable.
+     */
+    static void copyMediaFile(String mediaUrl, File saveDir, long messageTs) {
+        try {
+            // mediaUrl is usually an absolute path; strip "file://" if present
+            String path = mediaUrl.startsWith("file://")
+                    ? mediaUrl.substring(7) : mediaUrl;
+
+            File src = new File(path);
+            if (!src.exists() || !src.isFile() || !src.canRead()) {
+                Log.w(TAG, "DeletedMessageSaver: media not found or unreadable: " + path);
+                return;
+            }
+
+            // Build destination name: <ts>_<originalName>
+            String prefix = (messageTs > 0)
+                    ? new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date(messageTs))
+                    : new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
+            File dest = new File(saveDir, prefix + "_" + src.getName());
+
+            // Copy bytes
+            try (InputStream in  = new FileInputStream(src);
+                 OutputStream out = new FileOutputStream(dest, false)) {
+                byte[] buf = new byte[8192];
+                int len;
+                while ((len = in.read(buf)) != -1) {
+                    out.write(buf, 0, len);
+                }
+            }
+
+            Log.i(TAG, "DeletedMessageSaver: media saved → " + dest.getAbsolutePath());
+
+        } catch (IOException e) {
+            Log.e(TAG, "DeletedMessageSaver: media copy error: " + e.getMessage());
         }
     }
 
