@@ -60,6 +60,27 @@ if sys.platform == 'win32':
         return _original_check_call(cmd, *args, **kwargs)
     _subprocess.check_call = _windows_check_call
 
+# apktool fix: 3.0.2 (bundled with stitch) fails to round-trip WhatsApp's
+# AndroidManifest.xml. We override it with apktool 2.10.0 if present, or
+# download it automatically on the first run.
+import urllib.request as _urllib_request
+import stitch.common as _stitch_common
+import stitch.apk_utils as _stitch_apk_utils
+
+_APKTOOL_URL = (
+    'https://github.com/iBotPeaches/Apktool/releases/download/v2.10.0/apktool_2.10.0.jar'
+)
+_APKTOOL_LOCAL = Path(__file__).parent / 'apktool_2.10.0.jar'
+
+if not _APKTOOL_LOCAL.exists():
+    print('[+] Downloading apktool 2.10.0 (first-time setup, ~17 MB)...')
+    _urllib_request.urlretrieve(_APKTOOL_URL, _APKTOOL_LOCAL)
+    print('[+] apktool 2.10.0 downloaded.')
+
+# Override the path used by every stitch function
+_stitch_common.APKTOOL_PATH = _APKTOOL_LOCAL
+_stitch_apk_utils.APKTOOL_PATH = _APKTOOL_LOCAL
+
 from stitch import Stitch
 from stitch.common import ExternalModule
 
