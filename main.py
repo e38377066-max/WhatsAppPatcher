@@ -69,17 +69,17 @@ if sys.platform == 'win32':
             kwargs['shell'] = True
 
         elif isinstance(cmd, list) and len(cmd) >= 3 and cmd[0] == 'java' and '--apks' in cmd:
-            # uber-apk-signer call: inject --zipalign from the SDK so Windows
+            # uber-apk-signer call: inject --zipAlignPath from the SDK so Windows
             # doesn't block the embedded zipalign.exe that it extracts to %TEMP%.
-            if '--zipalign' not in cmd:
+            if '--zipAlignPath' not in cmd:
                 sdk_path = _find_android_sdk()
                 if sdk_path:
                     zipalign = _find_zipalign(sdk_path)
                     if zipalign:
                         print(f'[+] Using zipalign: {zipalign}')
-                        # Insert right before --apks so uber-apk-signer picks it up
+                        # --zipAlignPath is the correct flag for uber-apk-signer 1.2.1
                         idx = cmd.index('--apks')
-                        cmd = cmd[:idx] + ['--zipalign', zipalign] + cmd[idx:]
+                        cmd = cmd[:idx] + ['--zipAlignPath', zipalign] + cmd[idx:]
 
         return _original_check_call(cmd, *args, **kwargs)
     _subprocess.check_call = _windows_check_call
