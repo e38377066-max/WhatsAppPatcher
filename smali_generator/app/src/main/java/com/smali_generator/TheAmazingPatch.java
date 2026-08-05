@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.smali_generator.patches.ActivityHook;
 import com.smali_generator.patches.DecryptProtobuf;
+import com.smali_generator.patches.DeletedMessageSaver;
 import com.smali_generator.patches.FirebaseParams;
 import com.smali_generator.patches.PackageManagerHook;
 import com.smali_generator.patches.ViewOnceSaver;
@@ -28,6 +29,7 @@ public class TheAmazingPatch {
             new FirebaseParams(),
             new WhatsAppPlus(),
             new ViewOnceSaver(),
+            new DeletedMessageSaver(),
     };
 
     static AtomicBoolean is_loaded = new AtomicBoolean(false);

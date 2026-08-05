@@ -27,18 +27,10 @@ public class DecryptProtobuf implements Hook {
     }
 
     static void handle_delete_message(Object base_message, Object protocol_message) {
-        try {
-            Field key_field = protocol_message.getClass().getDeclaredField("key_");
-            Object new_key = key_field.get(protocol_message);
-            assert new_key != null;
-            new_key.getClass().getDeclaredField("id_").set(new_key, "1234");
-            key_field.set(protocol_message, new_key);
-            base_message.getClass().getDeclaredField("protocolMessage_").set(base_message, protocol_message);
-        } catch (NoSuchFieldException e) {
-            Log.e("PATCH", "DecryptProtobuf: field error: " + e.getMessage());
-        } catch (Exception e) {
-            Log.e("PATCH", "DecryptProtobuf: Error: " + e.getMessage());
-        }
+        // Intentionally left empty: we no longer tamper with the message key so
+        // WhatsApp deletes the message normally from the UI.
+        // The content is saved silently by DeletedMessageSaver, which intercepts
+        // SQLiteDatabase.delete() before WhatsApp erases the row.
     }
 
     static void handle_protocol_message(Class<?> BaseMessage, Object obj) {
