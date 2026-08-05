@@ -73,12 +73,20 @@ public class ViewOnceSaver implements Hook {
 
     /**
      * Returns true when the file is a media file inside WhatsApp's "Private"
-     * folder — the folder WhatsApp uses exclusively for view-once media that
-     * has been downloaded for display.
+     * or "Sent" folder — the folders WhatsApp uses for view-once media.
      *
-     * Typical paths:
+     * "Private" is used for received view-once media that has been downloaded
+     * for display.  "Sent" is used for view-once media that the local user
+     * composed and sent; WhatsApp also deletes the local copy via File.delete()
+     * once the message has been delivered/opened.
+     *
+     * Typical paths (received):
      *   …/WhatsApp/Media/WhatsApp Images/Private/<file>.jpg
      *   …/WhatsApp/Media/WhatsApp Video/Private/<file>.mp4
+     *
+     * Typical paths (sent):
+     *   …/WhatsApp/Media/WhatsApp Images/Sent/<file>.jpg
+     *   …/WhatsApp/Media/WhatsApp Video/Sent/<file>.mp4
      */
     static boolean isViewOnceMedia(File file) {
         if (file == null || !file.exists() || file.length() == 0) {
@@ -86,8 +94,8 @@ public class ViewOnceSaver implements Hook {
         }
         String path = file.getAbsolutePath();
 
-        // Must be inside a "Private" directory
-        if (!path.contains("/Private/")) {
+        // Must be inside a "Private" directory (received) or a "Sent" directory (sent)
+        if (!path.contains("/Private/") && !path.contains("/Sent/")) {
             return false;
         }
 
