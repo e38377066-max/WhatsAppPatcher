@@ -84,6 +84,96 @@ _stitch_apk_utils.APKTOOL_PATH = _APKTOOL_LOCAL
 from stitch import Stitch
 from stitch.common import ExternalModule
 
+# ---------------------------------------------------------------------------
+# Bundle → single-APK merge
+# ---------------------------------------------------------------------------
+import zipfile as _zipfile
+import subprocess as _subprocess_merge
+
+def _is_zip_bundle(path: Path) -> bool:
+    """Return True if the file is a ZIP containing .apk entries (bundle output)."""
+    try:
+        with _zipfile.ZipFile(path, 'r') as z:
+            return any(n.endswith('.apk') for n in z.namelist())
+    except Exception:
+        return False
+
+
+def _merge_bundle_to_single_apk(bundle_zip_path: Path, temp_path: Path) -> None:
+    """
+    Merge all split APKs inside bundle_zip_path into a single installable APK,
+    sign it with uber-apk-signer, and replace bundle_zip_path in-place.
+    """
+    import os as _os_merge
+
+    merge_dir = temp_path / '_merge_splits'
+    if merge_dir.exists():
+        import shutil as _shutil_merge
+        _shutil_merge.rmtree(merge_dir)
+    merge_dir.mkdir(parents=True)
+
+    # 1. Extract the bundle ZIP
+    with _zipfile.ZipFile(bundle_zip_path, 'r') as bz:
+        apk_names = [n for n in bz.namelist() if n.endswith('.apk')]
+        bz.extractall(merge_dir)
+
+    base_apk    = merge_dir / 'base.apk'
+    split_apks  = [merge_dir / n for n in apk_names if n != 'base.apk']
+
+    print(f'[+] Merging {len(split_apks)} splits into base.apk...')
+
+    # Files / prefixes to skip when copying from splits into base
+    _SKIP_NAMES    = {'AndroidManifest.xml', 'resources.arsc'}
+    _SKIP_PREFIXES = ('META-INF/',)
+
+    merged_path = merge_dir / 'merged_unsigned.apk'
+
+    with _zipfile.ZipFile(base_apk, 'r') as base_z:
+        existing = set(base_z.namelist())
+        with _zipfile.ZipFile(merged_path, 'w', _zipfile.ZIP_DEFLATED) as out_z:
+            # Copy every file from base.apk
+            for info in base_z.infolist():
+                out_z.writestr(info, base_z.read(info.filename))
+
+            # Inject unique files from each split (lib/, res/, assets/, dex…)
+            for split in split_apks:
+                print(f'[+]   Adding from {split.name}')
+                with _zipfile.ZipFile(split, 'r') as sp_z:
+                    for info in sp_z.infolist():
+                        name = info.filename
+                        if name in _SKIP_NAMES:
+                            continue
+                        if any(name.startswith(p) for p in _SKIP_PREFIXES):
+                            continue
+                        if name not in existing:
+                            out_z.writestr(info, sp_z.read(name))
+                            existing.add(name)
+
+    # 2. Sign merged APK with uber-apk-signer
+    print('[+] Signing merged APK...')
+    uber_jar = str(_stitch_apk_utils.UBER_APK_SIGNER_PATH)
+    sign_args = ['java', '-jar', uber_jar, '--allowResign', '--apks', str(merged_path)]
+    if _os_merge.environ.get('KEYSTORE_PATH'):
+        sign_args += ['--ks', _os_merge.environ['KEYSTORE_PATH']]
+    if _os_merge.environ.get('KEY_ALIAS'):
+        sign_args += ['--ksAlias', _os_merge.environ['KEY_ALIAS']]
+    if _os_merge.environ.get('KEYSTORE_PASSWORD'):
+        sign_args += ['--ksPass', _os_merge.environ['KEYSTORE_PASSWORD']]
+    if _os_merge.environ.get('KEY_PASSWORD'):
+        sign_args += ['--ksKeyPass', _os_merge.environ['KEY_PASSWORD']]
+    _subprocess_merge.check_call(sign_args)
+
+    signed_suffix = '-aligned-debugSigned.apk' if not _os_merge.environ.get('KEYSTORE_PATH') else '-aligned-signed.apk'
+    signed_path = Path(str(merged_path).removesuffix('.apk') + signed_suffix)
+
+    # 3. Replace the bundle ZIP with the single signed APK
+    bundle_zip_path.unlink()
+    import shutil as _shutil_merge2
+    _shutil_merge2.move(str(signed_path), str(bundle_zip_path))
+    _shutil_merge2.rmtree(merge_dir, ignore_errors=True)
+    print(f'[+] Single APK ready: {bundle_zip_path}')
+
+
 from artifactory_generator.firebase_params import FirebaseParamsFinder
 from artifactory_generator.fmessage import FMessage
 from artifactory_generator.dex_copier import DexCopier
@@ -142,6 +232,11 @@ def main():
             extra_artifacts=extra_artifacts,
     ) as stitch:
         stitch.patch()
+
+    # If the output is a split-APK bundle (ZIP), merge everything into one APK.
+    output_path = Path(args.output)
+    if output_path.exists() and _is_zip_bundle(output_path):
+        _merge_bundle_to_single_apk(output_path, Path(args.temp_path))
 
 
 if __name__ == '__main__':
