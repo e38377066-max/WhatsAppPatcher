@@ -237,12 +237,138 @@ def _is_zip_bundle(path: Path) -> bool:
         return False
 
 
-def _merge_bundle_to_single_apk(bundle_zip_path: Path, temp_path: Path) -> None:
+def _arsc_has_resource(arsc: bytes, type_id: int, entry_idx: int) -> bool:
+    """
+    Check whether a resources.arsc contains a resource entry for the given
+    type_id (1-indexed, the type byte of the resource ID) and entry_idx.
+
+    Parses RES_TABLE_TYPE_TYPE (0x0201) chunks and checks the entry-offset
+    array, handling both the dense and sparse (FLAG_SPARSE=0x01) formats.
+    Returns True if ANY config chunk of that type has a valid (present) entry.
+    """
+    import struct as _st
+    n = len(arsc)
+    pos = 0
+    # Walk top-level chunks; descend into package chunks to reach type chunks.
+    # A simple full scan for 0x0201 chunks is robust enough because their
+    # header carries size, so we can validate bounds as we go.
+    while pos + 8 <= n:
+        try:
+            ctype, chdr, csize = _st.unpack_from('<HHI', arsc, pos)
+        except _st.error:
+            break
+        if csize < 8 or pos + csize > n:
+            # Not a well-formed chunk boundary; advance by 4 to resync.
+            pos += 4
+            continue
+        if ctype == 0x0201:  # RES_TABLE_TYPE_TYPE
+            try:
+                tid = arsc[pos + 8]
+                flags = arsc[pos + 9]
+                entry_count, entries_start = _st.unpack_from('<II', arsc, pos + 12)
+            except (_st.error, IndexError):
+                pos += csize
+                continue
+            if tid == type_id:
+                is_sparse = bool(flags & 0x01)
+                arr_pos = pos + chdr  # entry offset array starts right after header
+                if is_sparse:
+                    # Sparse: entry_count pairs of (uint16 idx, uint16 offset/4)
+                    for i in range(entry_count):
+                        p = arr_pos + i * 4
+                        if p + 4 > n:
+                            break
+                        idx, _off = _st.unpack_from('<HH', arsc, p)
+                        if idx == entry_idx:
+                            return True
+                else:
+                    # Dense: entry_count uint32 offsets, 0xFFFFFFFF == no entry
+                    if entry_idx < entry_count:
+                        p = arr_pos + entry_idx * 4
+                        if p + 4 <= n:
+                            off = _st.unpack_from('<I', arsc, p)[0]
+                            if off != 0xFFFFFFFF:
+                                return True
+        pos += csize
+    return False
+
+
+def _extract_original_resources_arsc(original_apk_path: Path):
+    """
+    Extract resources.arsc from the original APK/APKM before patching.
+    Returns bytes or None if not found.
+    For APKM (ZIP of APKs), opens base.apk inside.
+    For regular APK, reads resources.arsc directly.
+    """
+    import io as _io_res
+    try:
+        with _zipfile.ZipFile(original_apk_path, 'r') as _oz:
+            names = _oz.namelist()
+            # APKM / XAPK: ZIP containing APKs
+            if any(n.endswith('.apk') for n in names):
+                # Find the largest APK (base.apk)
+                apk_entries = [n for n in names if n.endswith('.apk')]
+                main_name = max(apk_entries, key=lambda n: _oz.getinfo(n).file_size)
+                base_bytes = _oz.read(main_name)
+                with _zipfile.ZipFile(_io_res.BytesIO(base_bytes), 'r') as _base_z:
+                    if 'resources.arsc' in _base_z.namelist():
+                        data = _base_z.read('resources.arsc')
+                        print(f'[+] Original resources.arsc from {main_name}: {len(data):,} bytes')
+                        return data
+            # Regular APK
+            elif 'resources.arsc' in names:
+                data = _oz.read('resources.arsc')
+                print(f'[+] Original resources.arsc from APK: {len(data):,} bytes')
+                return data
+    except Exception as _e:
+        print(f'[!] Could not extract original resources.arsc: {_e}')
+    return None
+
+
+def _merge_bundle_to_single_apk(bundle_zip_path: Path, temp_path: Path, original_apk_path: Path = None) -> None:
     """
     Merge all split APKs inside bundle_zip_path into a single installable APK,
     sign it with uber-apk-signer, and replace bundle_zip_path in-place.
     """
     import os as _os_merge
+
+    # Extract original resources.arsc BEFORE apktool compilation, so resource
+    # IDs are guaranteed to be intact. apktool may corrupt resources.arsc even
+    # with -r/-c flags when it cannot fully decode certain APK formats (evidenced
+    # by the binary AndroidManifest.xml in the decoded folder). Since our patches
+    # only touch smali, resources.arsc must never change.
+    _original_arsc = None
+    if original_apk_path and original_apk_path.exists():
+        _original_arsc = _extract_original_resources_arsc(original_apk_path)
+
+    # DIAGNOSTIC: locate the crashing resource 0x7f0805e5 (type=0x08, entry=0x05e5).
+    # This tells us definitively whether it lives in base.apk's resources.arsc
+    # (apktool-corruption case → replacing arsc fixes it) or only in a split's
+    # resources.arsc (split-resource case → needs a full table merge).
+    _CRASH_TYPE_ID = 0x08
+    _CRASH_ENTRY   = 0x05e5
+    if _original_arsc is not None:
+        _found = _arsc_has_resource(_original_arsc, _CRASH_TYPE_ID, _CRASH_ENTRY)
+        print(f'[DIAG] Resource 0x7f0805e5 in ORIGINAL base.apk resources.arsc: {_found}')
+    # Also scan every split APK inside the original bundle for the same resource.
+    if original_apk_path and original_apk_path.exists():
+        try:
+            import io as _io_diag
+            with _zipfile.ZipFile(original_apk_path, 'r') as _oz_diag:
+                for _n in _oz_diag.namelist():
+                    if not _n.endswith('.apk'):
+                        continue
+                    try:
+                        _apk_bytes = _oz_diag.read(_n)
+                        with _zipfile.ZipFile(_io_diag.BytesIO(_apk_bytes), 'r') as _iz:
+                            if 'resources.arsc' in _iz.namelist():
+                                _sd = _iz.read('resources.arsc')
+                                if _arsc_has_resource(_sd, _CRASH_TYPE_ID, _CRASH_ENTRY):
+                                    print(f'[DIAG] Resource 0x7f0805e5 FOUND in split: {_n}')
+                    except Exception:
+                        pass
+        except Exception as _e:
+            print(f'[DIAG] split scan skipped: {_e}')
 
     merge_dir = temp_path / '_merge_splits'
     if merge_dir.exists():
@@ -322,10 +448,23 @@ def _merge_bundle_to_single_apk(bundle_zip_path: Path, temp_path: Path) -> None:
 
     with _zipfile.ZipFile(base_apk, 'r') as base_z:
         existing = set(base_z.namelist())
+        compiled_arsc_size = base_z.getinfo('resources.arsc').file_size if 'resources.arsc' in base_z.namelist() else 0
+        if _original_arsc:
+            print(f'[+] resources.arsc: compiled={compiled_arsc_size:,}B  original={len(_original_arsc):,}B')
+            if compiled_arsc_size != len(_original_arsc):
+                print('[!] Size mismatch — apktool modified resources.arsc; using original to preserve resource IDs')
+            else:
+                print('[+] resources.arsc size matches original — using original to be safe')
         with _zipfile.ZipFile(merged_path, 'w', _zipfile.ZIP_DEFLATED) as out_z:
-            # Copy every file from base.apk
+            # Copy every file from base.apk, substituting resources.arsc with the
+            # original (pre-apktool) version when available to guarantee resource IDs
+            # are intact. apktool can silently corrupt resources.arsc for obfuscated
+            # APKs even with -r/-c flags.
             for info in base_z.infolist():
-                out_z.writestr(info, base_z.read(info.filename))
+                if info.filename == 'resources.arsc' and _original_arsc:
+                    out_z.writestr(info, _original_arsc)
+                else:
+                    out_z.writestr(info, base_z.read(info.filename))
 
             # Inject unique files from each split (lib/, res/, assets/, dex…)
             for split in split_apks:
@@ -453,7 +592,7 @@ def main():
     # If the output is a split-APK bundle (ZIP), merge everything into one APK.
     output_path = Path(args.output)
     if output_path.exists() and _is_zip_bundle(output_path):
-        _merge_bundle_to_single_apk(output_path, Path(args.temp_path))
+        _merge_bundle_to_single_apk(output_path, Path(args.temp_path), Path(args.apk_path))
 
 
 if __name__ == '__main__':
