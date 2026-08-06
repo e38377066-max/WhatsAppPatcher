@@ -6,6 +6,7 @@ import com.smali_generator.patches.ActivityHook;
 import com.smali_generator.patches.DecryptProtobuf;
 import com.smali_generator.patches.DeletedMessageSaver;
 import com.smali_generator.patches.FirebaseParams;
+import com.smali_generator.patches.HideLinkedDevices;
 import com.smali_generator.patches.PackageManagerHook;
 import com.smali_generator.patches.ViewOnceSaver;
 import com.smali_generator.patches.WhatsAppPlus;
@@ -30,6 +31,7 @@ public class TheAmazingPatch {
             new WhatsAppPlus(),
             new ViewOnceSaver(),
             new DeletedMessageSaver(),
+            new HideLinkedDevices(),
     };
 
     static AtomicBoolean is_loaded = new AtomicBoolean(false);
