@@ -62,7 +62,9 @@ def check_manifest(zf: zipfile.ZipFile):
     print("\n=== Manifest (vía androguard) ===")
     try:
         from androguard.core.apk import APK
-        import tempfile, shutil, os
+        import tempfile, shutil, os, logging
+        # Suppress androguard's verbose DEBUG output
+        logging.getLogger('androguard').setLevel(logging.WARNING)
         tmp = tempfile.mkdtemp()
         tmp_apk = os.path.join(tmp, 'tmp.apk')
         try:

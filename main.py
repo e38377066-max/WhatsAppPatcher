@@ -146,11 +146,18 @@ def _patched_compile_apk(input_path, output_path):
             enc = 'latin-1'
         original = text
 
+        # Show a snippet so we can verify the decoded manifest format
+        first_lines = text.splitlines()[:15]
+        print('[DIAG] AndroidManifest.xml (decoded, first 15 lines):')
+        for ln in first_lines:
+            print('  ' + ln)
+
         # Remove attributes that mark this as a split APK bundle
         for pattern in _SPLIT_ATTRS:
+            before = text
             text = _re.sub(pattern, '', text)
-        if text != original:
-            print('[+] Removed split-APK attributes from AndroidManifest.xml')
+            if text != before:
+                print(f'[+] Manifest: removed pattern {pattern!r}')
 
         # Flip extractNativeLibs to true.
         # WhatsApp ships extractNativeLibs="false" which requires .so files to be
@@ -164,11 +171,16 @@ def _patched_compile_apk(input_path, output_path):
             text,
         )
         if patched != text:
-            print('[+] Set extractNativeLibs=true (avoids page-alignment check)')
+            print('[+] Manifest: set extractNativeLibs=true')
             text = patched
+        else:
+            print('[DIAG] extractNativeLibs="false" not found in decoded XML')
 
         if text != original:
             manifest.write_text(text, encoding=enc)
+            print('[+] AndroidManifest.xml patched and saved')
+        else:
+            print('[DIAG] No changes made to AndroidManifest.xml')
     return _original_compile_apk(input_path, output_path)
 
 _stitch_stitch.compile_apk = _patched_compile_apk
@@ -241,10 +253,30 @@ def _merge_bundle_to_single_apk(bundle_zip_path: Path, temp_path: Path) -> None:
                             out_z.writestr(info, sp_z.read(name))
                             existing.add(name)
 
-    # 2. Sign merged APK with uber-apk-signer
+    # 2. Page-align .so files to 4096-byte boundaries BEFORE signing.
+    #    extractNativeLibs="false" (WhatsApp default) makes Android load .so files
+    #    directly from the APK — they MUST be page-aligned or Android 13+ rejects
+    #    the install. uber-apk-signer only does 4-byte alignment, so we run
+    #    zipalign -p ourselves first, then sign with --skipZipAlign.
+    sdk_path_for_align = _find_android_sdk()
+    zipalign_exe = _find_zipalign(sdk_path_for_align) if sdk_path_for_align else None
+    if zipalign_exe:
+        merged_aligned = merge_dir / 'merged_aligned.apk'
+        print(f'[+] Page-aligning .so files (zipalign -p)...')
+        _subprocess_merge.check_call(
+            [zipalign_exe, '-p', '-f', '4', str(merged_path), str(merged_aligned)]
+        )
+        apk_to_sign = merged_aligned
+        print('[+] Page-alignment done ✓')
+    else:
+        print('[!] zipalign not found — skipping page-alignment (install may fail on Android 13+)')
+        apk_to_sign = merged_path
+
+    # 3. Sign the page-aligned APK. Use --skipZipAlign so uber-apk-signer does NOT
+    #    run zipalign again (which would undo the -p page-alignment we just did).
     print('[+] Signing merged APK...')
     uber_jar = str(_stitch_apk_utils.UBER_APK_SIGNER_PATH)
-    sign_args = ['java', '-jar', uber_jar, '--allowResign', '--apks', str(merged_path)]
+    sign_args = ['java', '-jar', uber_jar, '--allowResign', '--skipZipAlign', '--apks', str(apk_to_sign)]
     if _os_merge.environ.get('KEYSTORE_PATH'):
         sign_args += ['--ks', _os_merge.environ['KEYSTORE_PATH']]
     if _os_merge.environ.get('KEY_ALIAS'):
@@ -255,8 +287,8 @@ def _merge_bundle_to_single_apk(bundle_zip_path: Path, temp_path: Path) -> None:
         sign_args += ['--ksKeyPass', _os_merge.environ['KEY_PASSWORD']]
     _subprocess_merge.check_call(sign_args)
 
-    signed_suffix = '-aligned-debugSigned.apk' if not _os_merge.environ.get('KEYSTORE_PATH') else '-aligned-signed.apk'
-    signed_path = Path(str(merged_path).removesuffix('.apk') + signed_suffix)
+    signed_suffix = '-debugSigned.apk' if not _os_merge.environ.get('KEYSTORE_PATH') else '-signed.apk'
+    signed_path = Path(str(apk_to_sign).removesuffix('.apk') + signed_suffix)
 
     # 3. Replace the bundle ZIP with the single signed APK
     bundle_zip_path.unlink()
