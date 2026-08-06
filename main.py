@@ -188,9 +188,11 @@ def _merge_bundle_to_single_apk(bundle_zip_path: Path, temp_path: Path) -> None:
 
     print(f'[+] Merging {len(split_apks)} splits into base.apk...')
 
-    # Files / prefixes to skip when copying from splits into base
+    # Files / prefixes to skip when copying from splits into base.
+    # We only keep lib/arm64-v8a/ — including x86/x86_64 dirs without
+    # libarthooks.so confuses Android's ABI picker on some devices.
     _SKIP_NAMES    = {'AndroidManifest.xml', 'resources.arsc'}
-    _SKIP_PREFIXES = ('META-INF/',)
+    _SKIP_PREFIXES = ('META-INF/', 'lib/x86/', 'lib/x86_64/', 'lib/armeabi/')
 
     merged_path = merge_dir / 'merged_unsigned.apk'
 
