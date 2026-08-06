@@ -69,11 +69,12 @@ if sys.platform == 'win32':
             kwargs['shell'] = True
 
         elif isinstance(cmd, list) and len(cmd) >= 3 and cmd[0] == 'java' and '-jar' in cmd and '--apks' not in cmd:
-            # apktool / any java -jar call: cap heap at 1 GB so the JVM doesn't
-            # exhaust native OS memory on large APKs like WhatsApp (130 MB+).
+            # apktool / any java -jar call: WhatsApp's smali is huge; 1 GB caused
+            # an OOM during the apktool build step which produced a corrupt partial
+            # APK.  2 GB gives enough headroom for decode + compile on a 130 MB app.
             if not any(str(a).startswith('-Xmx') for a in cmd):
                 jar_idx = cmd.index('-jar')
-                cmd = cmd[:jar_idx] + ['-Xmx1g', '-Xss256k'] + cmd[jar_idx:]
+                cmd = cmd[:jar_idx] + ['-Xmx2g', '-Xss4m', '-XX:+UseG1GC'] + cmd[jar_idx:]
 
         elif isinstance(cmd, list) and len(cmd) >= 3 and cmd[0] == 'java' and '--apks' in cmd:
             # uber-apk-signer call: inject --zipAlignPath from the SDK so Windows
