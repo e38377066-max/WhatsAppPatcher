@@ -113,6 +113,19 @@ if not _APKTOOL_LOCAL.exists():
 _stitch_common.APKTOOL_PATH = _APKTOOL_LOCAL
 _stitch_apk_utils.APKTOOL_PATH = _APKTOOL_LOCAL
 
+# APKEditor (REAndroid): merges split APKs / APKM into a single universal APK,
+# correctly merging each split's resources.arsc (string pools, type specs,
+# entry tables) — something a hand-rolled ZIP merge cannot do. Downloaded once.
+_APKEDITOR_URL = (
+    'https://github.com/REAndroid/APKEditor/releases/download/V1.4.3/APKEditor-1.4.3.jar'
+)
+_APKEDITOR_LOCAL = Path(__file__).parent / 'APKEditor.jar'
+
+if not _APKEDITOR_LOCAL.exists():
+    print('[+] Downloading APKEditor 1.4.3 (first-time setup, ~10 MB)...')
+    _urllib_request.urlretrieve(_APKEDITOR_URL, _APKEDITOR_LOCAL)
+    print('[+] APKEditor downloaded.')
+
 from stitch import Stitch
 
 # ---------------------------------------------------------------------------
@@ -409,7 +422,7 @@ def _merge_bundle_to_single_apk(bundle_zip_path: Path, temp_path: Path, original
     _SKIP_NAMES    = {'AndroidManifest.xml', 'resources.arsc'}
     _SKIP_PREFIXES = ('META-INF/', 'lib/x86/', 'lib/x86_64/', 'lib/armeabi/', 'lib/armeabi-v7a/')
 
-    merged_path = merge_dir / 'merged_unsigned.apk'
+    merged_path = temp_path / 'merged_unsigned.apk'
 
     # ---------------------------------------------------------------------------
     # Binary manifest patcher — called AFTER the merged APK is assembled.
@@ -463,41 +476,31 @@ def _merge_bundle_to_single_apk(bundle_zip_path: Path, temp_path: Path, original
         _tmp.replace(apk_path)
         print('[+] APK rewritten with patched binary manifest')
 
-    with _zipfile.ZipFile(base_apk, 'r') as base_z:
-        existing = set(base_z.namelist())
-        compiled_arsc_size = base_z.getinfo('resources.arsc').file_size if 'resources.arsc' in base_z.namelist() else 0
-        if _original_arsc:
-            print(f'[+] resources.arsc: compiled={compiled_arsc_size:,}B  original={len(_original_arsc):,}B')
-            if compiled_arsc_size != len(_original_arsc):
-                print('[!] Size mismatch — apktool modified resources.arsc; using original to preserve resource IDs')
-            else:
-                print('[+] resources.arsc size matches original — using original to be safe')
-        with _zipfile.ZipFile(merged_path, 'w', _zipfile.ZIP_DEFLATED) as out_z:
-            # Copy every file from base.apk, substituting resources.arsc with the
-            # original (pre-apktool) version when available to guarantee resource IDs
-            # are intact. apktool can silently corrupt resources.arsc for obfuscated
-            # APKs even with -r/-c flags.
-            for info in base_z.infolist():
-                if info.filename == 'resources.arsc' and _original_arsc:
-                    out_z.writestr(info, _original_arsc)
-                else:
-                    out_z.writestr(info, base_z.read(info.filename))
+    # 2. Merge base.apk + splits into one universal APK using APKEditor.
+    #    A hand-rolled ZIP merge cannot combine the per-density resources.arsc
+    #    files (each split defines its own resource entries — e.g. 0x7f0805e5
+    #    lives only in the density splits, NOT in base.apk). APKEditor properly
+    #    merges the resource tables, string pools, and type specs, and rewrites
+    #    the manifest into a standalone (non-split) form.
+    #
+    #    APKEditor's `-i` accepts a directory of split apks. Our merge_dir holds
+    #    the patched base.apk plus all original splits — exactly what it expects.
+    if merged_path.exists():
+        merged_path.unlink()
+    print('[+] Merging with APKEditor (proper resources.arsc table merge)...')
+    _subprocess_merge.check_call([
+        'java', '-jar', str(_APKEDITOR_LOCAL),
+        'm',                       # merge
+        '-i', str(merge_dir),      # input dir of split apks
+        '-o', str(merged_path),    # single merged (unsigned) apk
+        '-f',                      # overwrite output if present
+    ])
+    if not merged_path.exists():
+        raise RuntimeError('APKEditor did not produce a merged APK')
 
-            # Inject unique files from each split (lib/, res/, assets/, dex…)
-            for split in split_apks:
-                print(f'[+]   Adding from {split.name}')
-                with _zipfile.ZipFile(split, 'r') as sp_z:
-                    for info in sp_z.infolist():
-                        name = info.filename
-                        if name in _SKIP_NAMES:
-                            continue
-                        if any(name.startswith(p) for p in _SKIP_PREFIXES):
-                            continue
-                        if name not in existing:
-                            out_z.writestr(info, sp_z.read(name))
-                            existing.add(name)
-
-    # 2. Patch split-enforcement attributes in the binary AndroidManifest.xml.
+    # APKEditor already produces a standalone manifest (split requirements
+    # removed), but run the binary-manifest cleaner as a defensive no-op in case
+    # any split-enforcement attribute survives.
     _patch_axml_attrs(merged_path)
 
     # 3. Page-align .so files to 4096-byte boundaries BEFORE signing.
