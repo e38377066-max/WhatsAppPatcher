@@ -248,49 +248,66 @@ def _arsc_has_resource(arsc: bytes, type_id: int, entry_idx: int) -> bool:
     """
     import struct as _st
     n = len(arsc)
-    pos = 0
-    # Walk top-level chunks; descend into package chunks to reach type chunks.
-    # A simple full scan for 0x0201 chunks is robust enough because their
-    # header carries size, so we can validate bounds as we go.
-    while pos + 8 <= n:
-        try:
-            ctype, chdr, csize = _st.unpack_from('<HHI', arsc, pos)
-        except _st.error:
-            break
-        if csize < 8 or pos + csize > n:
-            # Not a well-formed chunk boundary; advance by 4 to resync.
-            pos += 4
-            continue
-        if ctype == 0x0201:  # RES_TABLE_TYPE_TYPE
+
+    # Container chunk types whose *contents* are more chunks: we must descend
+    # into them (advance by headerSize), not skip them (advance by size).
+    # 0x0002 = RES_TABLE_TYPE (root, size == whole file)
+    # 0x0200 = RES_TABLE_PACKAGE_TYPE
+    _CONTAINERS = (0x0002, 0x0200)
+
+    def _walk(start: int, end: int) -> bool:
+        pos = start
+        while pos + 8 <= end:
             try:
+                ctype, chdr, csize = _st.unpack_from('<HHI', arsc, pos)
+            except _st.error:
+                return False
+            if chdr < 8 or csize < chdr or pos + csize > end:
+                # Malformed boundary; give up on this level.
+                return False
+            if ctype in _CONTAINERS:
+                # Descend: children start right after this chunk's header and
+                # span the rest of this chunk's body.
+                if _walk(pos + chdr, pos + csize):
+                    return True
+            elif ctype == 0x0201:  # RES_TABLE_TYPE_TYPE
                 tid = arsc[pos + 8]
                 flags = arsc[pos + 9]
-                entry_count, entries_start = _st.unpack_from('<II', arsc, pos + 12)
-            except (_st.error, IndexError):
-                pos += csize
-                continue
-            if tid == type_id:
-                is_sparse = bool(flags & 0x01)
-                arr_pos = pos + chdr  # entry offset array starts right after header
-                if is_sparse:
-                    # Sparse: entry_count pairs of (uint16 idx, uint16 offset/4)
-                    for i in range(entry_count):
-                        p = arr_pos + i * 4
-                        if p + 4 > n:
-                            break
-                        idx, _off = _st.unpack_from('<HH', arsc, p)
-                        if idx == entry_idx:
-                            return True
-                else:
-                    # Dense: entry_count uint32 offsets, 0xFFFFFFFF == no entry
-                    if entry_idx < entry_count:
-                        p = arr_pos + entry_idx * 4
-                        if p + 4 <= n:
-                            off = _st.unpack_from('<I', arsc, p)[0]
-                            if off != 0xFFFFFFFF:
+                entry_count = _st.unpack_from('<I', arsc, pos + 12)[0]
+                if tid == type_id:
+                    is_sparse = bool(flags & 0x01)
+                    is_offset16 = bool(flags & 0x02)
+                    arr_pos = pos + chdr  # entry offset array starts after header
+                    if is_sparse:
+                        # Sparse: entry_count pairs of (uint16 idx, uint16 off/4)
+                        for i in range(entry_count):
+                            p = arr_pos + i * 4
+                            if p + 4 > end:
+                                break
+                            idx = _st.unpack_from('<H', arsc, p)[0]
+                            if idx == entry_idx:
                                 return True
-        pos += csize
-    return False
+                    elif is_offset16:
+                        # Dense 16-bit offsets, 0xFFFF == no entry.
+                        if entry_idx < entry_count:
+                            p = arr_pos + entry_idx * 2
+                            if p + 2 <= end:
+                                off = _st.unpack_from('<H', arsc, p)[0]
+                                if off != 0xFFFF:
+                                    return True
+                    else:
+                        # Dense 32-bit offsets, 0xFFFFFFFF == no entry.
+                        if entry_idx < entry_count:
+                            p = arr_pos + entry_idx * 4
+                            if p + 4 <= end:
+                                off = _st.unpack_from('<I', arsc, p)[0]
+                                if off != 0xFFFFFFFF:
+                                    return True
+            # Leaf chunk (string pool, typeSpec, type): skip past it.
+            pos += csize
+        return False
+
+    return _walk(0, n)
 
 
 def _extract_original_resources_arsc(original_apk_path: Path):
