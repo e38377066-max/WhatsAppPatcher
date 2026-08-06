@@ -113,6 +113,41 @@ _stitch_common.APKTOOL_PATH = _APKTOOL_LOCAL
 _stitch_apk_utils.APKTOOL_PATH = _APKTOOL_LOCAL
 
 from stitch import Stitch
+
+# ---------------------------------------------------------------------------
+# Manifest patch: remove split-APK attributes that prevent standalone install
+# ---------------------------------------------------------------------------
+# base.apk from an APKM bundle may contain android:isSplitRequired="true"
+# or similar attributes. Android rejects such APKs as "not compatible" when
+# installed as a standalone monolithic APK (not via install-multiple).
+# We intercept compile_apk (called by stitch right before apktool builds) and
+# strip those attributes from the decoded AndroidManifest.xml.
+import re as _re
+import stitch.stitch as _stitch_stitch
+
+_SPLIT_ATTRS = (
+    r'\s+android:isSplitRequired="[^"]*"',
+    r'\s+android:splitName="[^"]*"',
+    r'\s+android:featureSplit="[^"]*"',
+    r'\s+android:requiredSplitTypes="[^"]*"',
+    r'\s+android:splitTypes="[^"]*"',
+)
+
+_original_compile_apk = _stitch_stitch.compile_apk
+
+def _patched_compile_apk(input_path, output_path):
+    manifest = input_path / 'AndroidManifest.xml'
+    if manifest.exists():
+        text = manifest.read_text(encoding='utf-8')
+        original = text
+        for pattern in _SPLIT_ATTRS:
+            text = _re.sub(pattern, '', text)
+        if text != original:
+            manifest.write_text(text, encoding='utf-8')
+            print('[+] Removed split-APK attributes from AndroidManifest.xml')
+    return _original_compile_apk(input_path, output_path)
+
+_stitch_stitch.compile_apk = _patched_compile_apk
 from stitch.common import ExternalModule
 
 # ---------------------------------------------------------------------------
