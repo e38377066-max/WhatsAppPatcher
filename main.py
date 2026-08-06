@@ -138,12 +138,17 @@ _original_compile_apk = _stitch_stitch.compile_apk
 def _patched_compile_apk(input_path, output_path):
     manifest = input_path / 'AndroidManifest.xml'
     if manifest.exists():
-        text = manifest.read_text(encoding='utf-8')
+        try:
+            text = manifest.read_text(encoding='utf-8')
+            enc = 'utf-8'
+        except UnicodeDecodeError:
+            text = manifest.read_text(encoding='latin-1')
+            enc = 'latin-1'
         original = text
         for pattern in _SPLIT_ATTRS:
             text = _re.sub(pattern, '', text)
         if text != original:
-            manifest.write_text(text, encoding='utf-8')
+            manifest.write_text(text, encoding=enc)
             print('[+] Removed split-APK attributes from AndroidManifest.xml')
     return _original_compile_apk(input_path, output_path)
 
