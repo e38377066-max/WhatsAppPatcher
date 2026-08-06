@@ -43,8 +43,11 @@ import java.util.Locale;
 public class DeletedMessageSaver implements Hook {
 
     private static final String TAG = "PATCH";
+    // Same visible folder ViewOnceSaver uses: inside WhatsApp's own media tree,
+    // writable without special permissions on Android 11+ and reachable from
+    // file managers / gallery. Keeps everything the patch rescues in one place.
     private static final String SAVE_SUBDIR =
-            "Android/data/com.whatsapp/files/.once_media";
+            "Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Once Media";
 
     // Prevent re-entrant calls: our own db.query() inside the hook must not
     // trigger the hook again.
@@ -97,16 +100,18 @@ public class DeletedMessageSaver implements Hook {
                              String[] whereArgs) {
         Cursor cursor = null;
         try {
-            // Common WhatsApp message columns (present across many versions).
-            // We request only what we need; missing columns are handled below.
+            // WhatsApp's schema changes between versions (older builds used
+            // key_remote_jid/data/media_url on the "message" table; newer builds
+            // use from_me/text_data and move the jid to a separate table). To be
+            // version-proof we select ALL columns (null projection) and resolve
+            // each field by trying several candidate column names below.
             cursor = db.query(
                     "message",
-                    new String[]{"key_remote_jid", "key_from_me",
-                            "timestamp", "data", "media_name", "media_url"},
+                    null,
                     whereClause,
                     whereArgs,
                     null, null,
-                    "timestamp ASC"
+                    null
             );
 
             if (cursor == null || cursor.getCount() == 0) return;
@@ -114,13 +119,14 @@ public class DeletedMessageSaver implements Hook {
             StringBuilder sb = new StringBuilder();
             String chatJid = null;
 
-            // Column indices — guard against missing columns
-            int colJid       = safeColumn(cursor, "key_remote_jid");
-            int colFromMe    = safeColumn(cursor, "key_from_me");
-            int colTimestamp = safeColumn(cursor, "timestamp");
-            int colData      = safeColumn(cursor, "data");
-            int colMedia     = safeColumn(cursor, "media_name");
-            int colMediaUrl  = safeColumn(cursor, "media_url");
+            // Column indices — try several candidate names so we survive the
+            // schema differences between WhatsApp versions.
+            int colJid       = safeColumn(cursor, "key_remote_jid", "remote_jid", "chat_row_id");
+            int colFromMe    = safeColumn(cursor, "key_from_me", "from_me");
+            int colTimestamp = safeColumn(cursor, "timestamp", "received_timestamp");
+            int colData      = safeColumn(cursor, "data", "text_data", "message_text");
+            int colMedia     = safeColumn(cursor, "media_name", "file_path");
+            int colMediaUrl  = safeColumn(cursor, "media_url", "file_path", "media_local_path");
 
             SimpleDateFormat sdf =
                     new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
@@ -130,7 +136,6 @@ public class DeletedMessageSaver implements Hook {
             File saveDir = new File(sdcard, SAVE_SUBDIR);
             if (!saveDir.exists()) {
                 saveDir.mkdirs();
-                new File(saveDir, ".nomedia").createNewFile();
             }
 
             while (cursor.moveToNext()) {
@@ -179,13 +184,19 @@ public class DeletedMessageSaver implements Hook {
         }
     }
 
-    /** Returns a column index or -1 if the column doesn't exist. */
-    static int safeColumn(Cursor cursor, String name) {
-        try {
-            return cursor.getColumnIndexOrThrow(name);
-        } catch (IllegalArgumentException e) {
-            return -1;
+    /**
+     * Returns the index of the first column whose name matches one of the
+     * candidates, or -1 if none exist. getColumnIndex() returns -1 (rather than
+     * throwing) for missing columns, so we can try each candidate in order.
+     */
+    static int safeColumn(Cursor cursor, String... names) {
+        for (String name : names) {
+            int idx = cursor.getColumnIndex(name);
+            if (idx >= 0) {
+                return idx;
+            }
         }
+        return -1;
     }
 
     /**

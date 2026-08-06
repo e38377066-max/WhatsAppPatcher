@@ -1,0 +1,207 @@
+--------- beginning of main
+08-06 18:34:05.110 15219 20392 I PATCH   : PackageManagerHook: package_info: PackageInfo{630b2ad com.google.android.gms}, package_name: com.google.android.gms, flags: 0
+08-06 18:34:05.666 15219 15266 I PATCH   : PackageManagerHook: package_info: PackageInfo{8207878 com.facebook.services}, package_name: com.facebook.services, flags: 134221824
+08-06 18:36:50.064 15219 21220 I PATCH   : PackageManagerHook: package_info: PackageInfo{630b2ad com.google.android.gms}, package_name: com.google.android.gms, flags: 0
+08-06 18:36:50.874 15219 15266 I PATCH   : PackageManagerHook: package_info: PackageInfo{8207878 com.facebook.services}, package_name: com.facebook.services, flags: 134221824
+08-06 18:39:05.252 15219 22060 I PATCH   : PackageManagerHook: package_info: PackageInfo{630b2ad com.google.android.gms}, package_name: com.google.android.gms, flags: 0
+08-06 18:39:06.071 15219 15266 I PATCH   : PackageManagerHook: package_info: PackageInfo{8207878 com.facebook.services}, package_name: com.facebook.services, flags: 134221824
+08-06 18:41:43.521 15219 22240 I PATCH   : PackageManagerHook: package_info: PackageInfo{630b2ad com.google.android.gms}, package_name: com.google.android.gms, flags: 0
+08-06 18:41:44.217 15219 15266 I PATCH   : PackageManagerHook: package_info: PackageInfo{8207878 com.facebook.services}, package_name: com.facebook.services, flags: 134221824
+08-06 18:43:12.736 15219 22417 I PATCH   : PackageManagerHook: package_info: PackageInfo{630b2ad com.google.android.gms}, package_name: com.google.android.gms, flags: 0
+08-06 18:43:14.482 15219 15266 I PATCH   : PackageManagerHook: package_info: PackageInfo{8207878 com.facebook.services}, package_name: com.facebook.services, flags: 134221824
+08-06 18:45:03.756 15219 22749 I PATCH   : PackageManagerHook: package_info: PackageInfo{630b2ad com.google.android.gms}, package_name: com.google.android.gms, flags: 0
+08-06 18:45:04.322 15219 15266 I PATCH   : PackageManagerHook: package_info: PackageInfo{8207878 com.facebook.services}, package_name: com.facebook.services, flags: 134221824
+08-06 18:47:07.258 15219 23038 I PATCH   : PackageManagerHook: package_info: PackageInfo{630b2ad com.google.android.gms}, package_name: com.google.android.gms, flags: 0
+08-06 18:47:07.987 15219 15266 I PATCH   : PackageManagerHook: package_info: PackageInfo{8207878 com.facebook.services}, package_name: com.facebook.services, flags: 134221824
+08-06 18:48:32.940 15219 23522 I PATCH   : PackageManagerHook: package_info: PackageInfo{630b2ad com.google.android.gms}, package_name: com.google.android.gms, flags: 0
+08-06 18:48:34.448 15219 15266 I PATCH   : PackageManagerHook: package_info: PackageInfo{8207878 com.facebook.services}, package_name: com.facebook.services, flags: 134221824
+08-06 18:50:16.801 15219 23726 I PATCH   : PackageManagerHook: package_info: PackageInfo{630b2ad com.google.android.gms}, package_name: com.google.android.gms, flags: 0
+08-06 18:50:17.540 15219 15266 I PATCH   : PackageManagerHook: package_info: PackageInfo{8207878 com.facebook.services}, package_name: com.facebook.services, flags: 134221824
+08-06 18:52:28.612 15219 24044 I PATCH   : PackageManagerHook: package_info: PackageInfo{1ecbcb8 com.google.android.gms}, package_name: com.google.android.gms, flags: 0
+08-06 18:52:29.173 15219 15266 I PATCH   : PackageManagerHook: package_info: PackageInfo{9167e7e com.facebook.services}, package_name: com.facebook.services, flags: 134221824
+08-06 18:54:49.342 15219 24438 I PATCH   : PackageManagerHook: package_info: PackageInfo{1ecbcb8 com.google.android.gms}, package_name: com.google.android.gms, flags: 0
+08-06 18:54:49.956 15219 15266 I PATCH   : PackageManagerHook: package_info: PackageInfo{9167e7e com.facebook.services}, package_name: com.facebook.services, flags: 134221824
+08-06 18:56:20.519 15219 24712 I PATCH   : PackageManagerHook: package_info: PackageInfo{1ecbcb8 com.google.android.gms}, package_name: com.google.android.gms, flags: 0
+08-06 18:56:21.166 15219 15266 I PATCH   : PackageManagerHook: package_info: PackageInfo{9167e7e com.facebook.services}, package_name: com.facebook.services, flags: 134221824
+08-06 19:00:37.422 15219 25191 I PATCH   : PackageManagerHook: package_info: PackageInfo{1ecbcb8 com.google.android.gms}, package_name: com.google.android.gms, flags: 0
+08-06 19:00:38.511 15219 15266 I PATCH   : PackageManagerHook: package_info: PackageInfo{9167e7e com.facebook.services}, package_name: com.facebook.services, flags: 134221824
+08-06 19:01:31.141 15219 15219 I PATCH   : PackageManagerHook: package_info: PackageInfo{3e2dba2 com.whatsapp}, package_name: com.whatsapp, flags: 134217728
+08-06 19:01:31.141 15219 15219 I PATCH   : PackageManagerHook: Replacing package info...
+08-06 19:01:31.143 15219 15219 I PATCH   : PackageManagerHook: package_info: PackageInfo{3e2dba2 com.whatsapp}, package_name: com.whatsapp, flags: 134217728
+08-06 19:01:31.143 15219 15219 I PATCH   : PackageManagerHook: Replacing package info...
+08-06 19:01:45.629 15219 15219 I PATCH   : PackageManagerHook: package_info: PackageInfo{2683bda com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:01:45.689 15219 25206 I PATCH   : PackageManagerHook: package_info: PackageInfo{cb52d5 com.instagram.android}, package_name: com.instagram.android, flags: 134217728
+08-06 19:01:45.691 15219 25206 I PATCH   : PackageManagerHook: package_info: PackageInfo{f8d5aea com.facebook.lite}, package_name: com.facebook.lite, flags: 134217728
+08-06 19:01:45.691 15219 25206 I PATCH   : PackageManagerHook: package_info: PackageInfo{bdf31db com.instagram.android}, package_name: com.instagram.android, flags: 0
+08-06 19:01:45.697 15219 25206 I PATCH   : PackageManagerHook: package_info: PackageInfo{3e2dba2 com.whatsapp}, package_name: com.whatsapp, flags: 134217728
+08-06 19:01:45.697 15219 25206 I PATCH   : PackageManagerHook: Replacing package info...
+08-06 19:01:45.697 15219 25206 I PATCH   : PackageManagerHook: package_info: PackageInfo{3e2dba2 com.whatsapp}, package_name: com.whatsapp, flags: 134217728
+08-06 19:01:45.697 15219 25206 I PATCH   : PackageManagerHook: Replacing package info...
+08-06 19:01:45.699 15219 25206 I PATCH   : PackageManagerHook: package_info: PackageInfo{3e2dba2 com.whatsapp}, package_name: com.whatsapp, flags: 134217728
+08-06 19:01:45.699 15219 25206 I PATCH   : PackageManagerHook: Replacing package info...
+08-06 19:01:45.699 15219 25206 I PATCH   : PackageManagerHook: package_info: PackageInfo{3e2dba2 com.whatsapp}, package_name: com.whatsapp, flags: 134217728
+08-06 19:01:45.699 15219 25206 I PATCH   : PackageManagerHook: Replacing package info...
+08-06 19:02:12.825 15219 15219 I PATCH   : PackageManagerHook: package_info: PackageInfo{3e2dba2 com.whatsapp}, package_name: com.whatsapp, flags: 134217728
+08-06 19:02:12.825 15219 15219 I PATCH   : PackageManagerHook: Replacing package info...
+08-06 19:02:12.825 15219 15219 I PATCH   : PackageManagerHook: package_info: PackageInfo{3e2dba2 com.whatsapp}, package_name: com.whatsapp, flags: 134217728
+08-06 19:02:12.825 15219 15219 I PATCH   : PackageManagerHook: Replacing package info...
+08-06 19:02:22.604 15219 15219 I PATCH   : PackageManagerHook: package_info: PackageInfo{3e2dba2 com.whatsapp}, package_name: com.whatsapp, flags: 134217728
+08-06 19:02:22.604 15219 15219 I PATCH   : PackageManagerHook: Replacing package info...
+08-06 19:02:22.604 15219 15219 I PATCH   : PackageManagerHook: package_info: PackageInfo{3e2dba2 com.whatsapp}, package_name: com.whatsapp, flags: 134217728
+08-06 19:02:22.604 15219 15219 I PATCH   : PackageManagerHook: Replacing package info...
+08-06 19:02:30.217 15219 15219 I PATCH   : PackageManagerHook: package_info: PackageInfo{2683bda com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:02:30.266 15219 25454 I PATCH   : PackageManagerHook: package_info: PackageInfo{3e2dba2 com.whatsapp}, package_name: com.whatsapp, flags: 134217728
+08-06 19:02:30.266 15219 25454 I PATCH   : PackageManagerHook: Replacing package info...
+08-06 19:02:30.267 15219 25454 I PATCH   : PackageManagerHook: package_info: PackageInfo{3e2dba2 com.whatsapp}, package_name: com.whatsapp, flags: 134217728
+08-06 19:02:30.267 15219 25454 I PATCH   : PackageManagerHook: Replacing package info...
+08-06 19:02:30.267 15219 25454 I PATCH   : PackageManagerHook: package_info: PackageInfo{3e2dba2 com.whatsapp}, package_name: com.whatsapp, flags: 134217728
+08-06 19:02:30.267 15219 25454 I PATCH   : PackageManagerHook: Replacing package info...
+08-06 19:04:57.907 29479 29479 E PATCH   : Patch loaded!
+08-06 19:04:57.908 29479 29479 E PATCH   : FMessage: init error: com.whatsapp.jid.DeviceJid
+08-06 19:04:57.908 29479 29479 I PATCH   : DecryptProtobuf: Patch loaded
+08-06 19:04:57.941 29479 29479 I PATCH   : PackageManagerHook: Patch loaded
+08-06 19:04:57.942 29479 29479 I PATCH   : ZipFileHook: Patch loaded
+08-06 19:04:57.942 29479 29479 I PATCH   : ActivityHook: Patch loaded
+08-06 19:04:57.943 29479 29479 I PATCH   : FirebaseParams: Patch loaded
+08-06 19:04:57.944 29479 29479 I PATCH   : WhatsAppPlus: Patch loaded
+08-06 19:04:57.944 29479 29479 I PATCH   : ViewOnceSaver: loading patch
+08-06 19:04:57.945 29479 29479 I PATCH   : ViewOnceSaver: patch loaded OK
+08-06 19:04:57.945 29479 29479 I PATCH   : DeletedMessageSaver: loading patch
+08-06 19:04:57.945 29479 29479 I PATCH   : DeletedMessageSaver: patch loaded OK
+08-06 19:04:57.945 29479 29479 I PATCH   : HideLinkedDevices: Patch loaded
+08-06 19:04:57.946 29479 29479 I PATCH   : HideLinkedDevices: hook installed
+08-06 19:04:58.292 29479 29513 I PATCH   : PackageManagerHook: package_info: PackageInfo{c8afa15 com.google.android.gms}, package_name: com.google.android.gms, flags: 0
+08-06 19:04:58.306 29479 29513 I PATCH   : PackageManagerHook: package_info: PackageInfo{9557df7 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:04:58.836 29479 29519 I PATCH   : PackageManagerHook: package_info: PackageInfo{cd8b683 com.whatsapp}, package_name: com.whatsapp, flags: 64
+08-06 19:04:58.836 29479 29519 I PATCH   : PackageManagerHook: Replacing package info...
+08-06 19:05:01.288 29479 29479 I PATCH   : PackageManagerHook: package_info: PackageInfo{c973934 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:01.511 29479 29513 I PATCH   : PackageManagerHook: package_info: PackageInfo{5fd43d com.google.android.gms}, package_name: com.google.android.gms, flags: 0
+08-06 19:05:01.514 29479 29540 I PATCH   : PackageManagerHook: package_info: PackageInfo{18e517e com.facebook.appmanager}, package_name: com.facebook.appmanager, flags: 192
+08-06 19:05:01.518 29479 29540 I PATCH   : PackageManagerHook: package_info: PackageInfo{be146df com.facebook.system}, package_name: com.facebook.system, flags: 4288
+08-06 19:05:01.520 29479 29540 I PATCH   : PackageManagerHook: package_info: PackageInfo{5d346ad com.facebook.appmanager}, package_name: com.facebook.appmanager, flags: 8
+08-06 19:05:01.563 29479 29540 I PATCH   : PackageManagerHook: package_info: PackageInfo{3822573 com.android.vending}, package_name: com.android.vending, flags: 64
+08-06 19:05:01.582 29479 29540 I PATCH   : PackageManagerHook: package_info: PackageInfo{eb0162e com.android.vending}, package_name: com.android.vending, flags: 0
+08-06 19:05:02.277 29479 29479 I PATCH   : PackageManagerHook: package_info: PackageInfo{cb311bb com.instagram.android}, package_name: com.instagram.android, flags: 0
+08-06 19:05:02.338 29479 29479 I PATCH   : PackageManagerHook: package_info: PackageInfo{c973934 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:02.454 29479 29716 I PATCH   : PackageManagerHook: package_info: PackageInfo{cb311bb com.instagram.android}, package_name: com.instagram.android, flags: 0
+08-06 19:05:02.463 29479 29583 I PATCH   : PackageManagerHook: package_info: PackageInfo{cb311bb com.instagram.android}, package_name: com.instagram.android, flags: 0
+08-06 19:05:02.496 29479 29591 I PATCH   : PackageManagerHook: package_info: PackageInfo{83dfab4 com.android.vending}, package_name: com.android.vending, flags: 8256
+08-06 19:05:02.504 29479 29591 I PATCH   : PackageManagerHook: package_info: PackageInfo{ffec6dd com.google.android.gms}, package_name: com.google.android.gms, flags: 64
+08-06 19:05:02.526 29479 29545 I PATCH   : PackageManagerHook: package_info: PackageInfo{c003252 com.android.vending}, package_name: com.android.vending, flags: 128
+08-06 19:05:03.023 29479 29724 I PATCH   : PackageManagerHook: package_info: PackageInfo{cb311bb com.instagram.android}, package_name: com.instagram.android, flags: 0
+08-06 19:05:03.041 29479 29716 I PATCH   : PackageManagerHook: package_info: PackageInfo{cb311bb com.instagram.android}, package_name: com.instagram.android, flags: 0
+08-06 19:05:03.211 29479 29716 I PATCH   : PackageManagerHook: package_info: PackageInfo{64099b com.instagram.android}, package_name: com.instagram.android, flags: 134217728
+08-06 19:05:03.235 29479 29725 I PATCH   : PackageManagerHook: package_info: PackageInfo{83dfab4 com.android.vending}, package_name: com.android.vending, flags: 8256
+08-06 19:05:03.235 29479 29725 I PATCH   : PackageManagerHook: package_info: PackageInfo{ffec6dd com.google.android.gms}, package_name: com.google.android.gms, flags: 64
+08-06 19:05:03.260 29479 29724 I PATCH   : PackageManagerHook: package_info: PackageInfo{e678138 com.instagram.android}, package_name: com.instagram.android, flags: 134217728
+08-06 19:05:04.015 29479 29479 I PATCH   : PackageManagerHook: package_info: PackageInfo{c973934 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:04.261 29479 29545 I PATCH   : PackageManagerHook: package_info: PackageInfo{eb0162e com.android.vending}, package_name: com.android.vending, flags: 0
+08-06 19:05:04.269 29479 29545 I PATCH   : PackageManagerHook: package_info: PackageInfo{83dfab4 com.android.vending}, package_name: com.android.vending, flags: 8256
+08-06 19:05:04.269 29479 29545 I PATCH   : PackageManagerHook: package_info: PackageInfo{ffec6dd com.google.android.gms}, package_name: com.google.android.gms, flags: 64
+08-06 19:05:04.272 29479 29537 I PATCH   : PackageManagerHook: package_info: PackageInfo{cb311bb com.instagram.android}, package_name: com.instagram.android, flags: 0
+08-06 19:05:04.446 29479 29717 I PATCH   : PackageManagerHook: package_info: PackageInfo{cb311bb com.instagram.android}, package_name: com.instagram.android, flags: 0
+08-06 19:05:04.760 29479 29717 I PATCH   : PackageManagerHook: package_info: PackageInfo{cb311bb com.instagram.android}, package_name: com.instagram.android, flags: 0
+08-06 19:05:04.761 29479 29717 I PATCH   : PackageManagerHook: package_info: PackageInfo{e678138 com.instagram.android}, package_name: com.instagram.android, flags: 134217728
+08-06 19:05:04.844 29479 29716 I PATCH   : PackageManagerHook: package_info: PackageInfo{cb311bb com.instagram.android}, package_name: com.instagram.android, flags: 0
+08-06 19:05:04.844 29479 29716 I PATCH   : PackageManagerHook: package_info: PackageInfo{e678138 com.instagram.android}, package_name: com.instagram.android, flags: 134217728
+08-06 19:05:05.143 29479 29716 I PATCH   : PackageManagerHook: package_info: PackageInfo{3aa7c2b com.instagram.android}, package_name: com.instagram.android, flags: 0
+08-06 19:05:05.204 29479 29716 I PATCH   : PackageManagerHook: package_info: PackageInfo{414534 com.instagram.android}, package_name: com.instagram.android, flags: 134217728
+08-06 19:05:06.198 29479 29479 I PATCH   : PackageManagerHook: package_info: PackageInfo{c695183 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:06.926 29479 29870 I PATCH   : PackageManagerHook: package_info: PackageInfo{3ca5a55 com.android.vending}, package_name: com.android.vending, flags: 128
+08-06 19:05:07.044 29479 29869 I PATCH   : PackageManagerHook: package_info: PackageInfo{3aa7c2b com.instagram.android}, package_name: com.instagram.android, flags: 0
+08-06 19:05:07.110 29479 29882 I PATCH   : PackageManagerHook: package_info: PackageInfo{3aa7c2b com.instagram.android}, package_name: com.instagram.android, flags: 0
+08-06 19:05:07.110 29479 29882 I PATCH   : PackageManagerHook: package_info: PackageInfo{414534 com.instagram.android}, package_name: com.instagram.android, flags: 134217728
+08-06 19:05:09.682 29479 29479 I PATCH   : PackageManagerHook: package_info: PackageInfo{a1ca2ee com.instagram.android}, package_name: com.instagram.android, flags: 0
+08-06 19:05:09.690 29479 29511 I PATCH   : PackageManagerHook: package_info: PackageInfo{cb3fffa com.facebook.appmanager}, package_name: com.facebook.appmanager, flags: 192
+08-06 19:05:09.692 29479 29511 I PATCH   : PackageManagerHook: package_info: PackageInfo{1e07808 com.facebook.system}, package_name: com.facebook.system, flags: 4288
+08-06 19:05:09.716 29479 29479 I PATCH   : PackageManagerHook: package_info: PackageInfo{ec6e587 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:09.737 29479 29511 I PATCH   : PackageManagerHook: package_info: PackageInfo{2090cb4 com.facebook.services}, package_name: com.facebook.services, flags: 192
+08-06 19:05:09.806 29479 30011 I PATCH   : PackageManagerHook: package_info: PackageInfo{556de95 com.android.vending}, package_name: com.android.vending, flags: 64
+08-06 19:05:09.990 29479 29479 I PATCH   : PackageManagerHook: package_info: PackageInfo{ec6e587 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:10.536 29479 29744 I PATCH   : PackageManagerHook: package_info: PackageInfo{ec6e587 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:11.383 29479 30086 I PATCH   : PackageManagerHook: package_info: PackageInfo{ec6e587 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:11.385 29479 30086 I PATCH   : PackageManagerHook: package_info: PackageInfo{aa041c9 com.whatsapp}, package_name: com.whatsapp, flags: 134217728
+08-06 19:05:11.385 29479 30086 I PATCH   : PackageManagerHook: Replacing package info...
+08-06 19:05:11.385 29479 30086 I PATCH   : PackageManagerHook: package_info: PackageInfo{aa041c9 com.whatsapp}, package_name: com.whatsapp, flags: 134217728
+08-06 19:05:11.385 29479 30086 I PATCH   : PackageManagerHook: Replacing package info...
+08-06 19:05:11.450 29479 29511 I PATCH   : PackageManagerHook: package_info: PackageInfo{ee99960 com.android.vending}, package_name: com.android.vending, flags: 8256
+08-06 19:05:11.451 29479 29511 I PATCH   : PackageManagerHook: package_info: PackageInfo{6afbede com.google.android.gms}, package_name: com.google.android.gms, flags: 64
+08-06 19:05:12.928 29479 30095 I PATCH   : PackageManagerHook: package_info: PackageInfo{8bbb556 com.facebook.appmanager}, package_name: com.facebook.appmanager, flags: 192
+08-06 19:05:12.929 29479 30095 I PATCH   : PackageManagerHook: package_info: PackageInfo{fb099d7 com.facebook.system}, package_name: com.facebook.system, flags: 4288
+08-06 19:05:12.938 29479 30095 I PATCH   : PackageManagerHook: package_info: PackageInfo{8bbb556 com.facebook.appmanager}, package_name: com.facebook.appmanager, flags: 192
+08-06 19:05:12.938 29479 30094 I PATCH   : PackageManagerHook: package_info: PackageInfo{8bbb556 com.facebook.appmanager}, package_name: com.facebook.appmanager, flags: 192
+08-06 19:05:12.938 29479 30094 I PATCH   : PackageManagerHook: package_info: PackageInfo{fb099d7 com.facebook.system}, package_name: com.facebook.system, flags: 4288
+08-06 19:05:12.951 29479 30094 I PATCH   : PackageManagerHook: package_info: PackageInfo{8bbb556 com.facebook.appmanager}, package_name: com.facebook.appmanager, flags: 192
+08-06 19:05:17.420 29479 29479 I PATCH   : PackageManagerHook: package_info: PackageInfo{8a7c710 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:18.391 29479 29630 I PATCH   : PackageManagerHook: package_info: PackageInfo{b6a64fb com.whatsapp}, package_name: com.whatsapp, flags: 134217728
+08-06 19:05:18.391 29479 29630 I PATCH   : PackageManagerHook: Replacing package info...
+08-06 19:05:25.353 29479 29939 I PATCH   : PackageManagerHook: package_info: PackageInfo{7a4b3e3 com.whatsapp}, package_name: com.whatsapp, flags: 1
+08-06 19:05:25.588 29479 29867 I PATCH   : PackageManagerHook: package_info: PackageInfo{d7eb104 com.whatsapp}, package_name: com.whatsapp, flags: 134217728
+08-06 19:05:25.589 29479 29867 I PATCH   : PackageManagerHook: Replacing package info...
+08-06 19:05:26.144 29479 30629 I PATCH   : PackageManagerHook: package_info: PackageInfo{9f35e32 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:26.163 29479 30629 I PATCH   : PackageManagerHook: package_info: PackageInfo{9f35e32 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:26.189 29479 29939 I PATCH   : PackageManagerHook: package_info: PackageInfo{efbcd00 com.facebook.lite}, package_name: com.facebook.lite, flags: 134217728
+08-06 19:05:26.204 29479 29939 I PATCH   : PackageManagerHook: package_info: PackageInfo{7ac7939 com.facebook.orca}, package_name: com.facebook.orca, flags: 134217728
+08-06 19:05:26.208 29479 29939 I PATCH   : PackageManagerHook: package_info: PackageInfo{c752b7e com.instagram.android}, package_name: com.instagram.android, flags: 134217728
+08-06 19:05:26.211 29479 29939 I PATCH   : PackageManagerHook: package_info: PackageInfo{29818df com.whatsapp}, package_name: com.whatsapp, flags: 134217728
+08-06 19:05:26.211 29479 29939 I PATCH   : PackageManagerHook: Replacing package info...
+08-06 19:05:26.215 29479 30629 I PATCH   : PackageManagerHook: package_info: PackageInfo{9f35e32 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:26.215 29479 29939 I PATCH   : PackageManagerHook: package_info: PackageInfo{29818df com.whatsapp}, package_name: com.whatsapp, flags: 134217728
+08-06 19:05:26.215 29479 29939 I PATCH   : PackageManagerHook: Replacing package info...
+08-06 19:05:26.777 29479 30629 I PATCH   : PackageManagerHook: package_info: PackageInfo{9f35e32 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:26.822 29479 30629 I PATCH   : PackageManagerHook: package_info: PackageInfo{9f35e32 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:26.861 29479 30629 I PATCH   : PackageManagerHook: package_info: PackageInfo{9f35e32 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:27.007 29479 30629 I PATCH   : PackageManagerHook: package_info: PackageInfo{9f35e32 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:27.275 29479 30629 I PATCH   : PackageManagerHook: package_info: PackageInfo{9f35e32 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:27.287 29479 30629 I PATCH   : PackageManagerHook: package_info: PackageInfo{9f35e32 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:27.514 29479 30629 I PATCH   : PackageManagerHook: package_info: PackageInfo{58895ca com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:27.576 29479 30629 I PATCH   : PackageManagerHook: package_info: PackageInfo{2bdff com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:27.590 29479 30629 I PATCH   : PackageManagerHook: package_info: PackageInfo{2bdff com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:28.410 29479 30629 I PATCH   : PackageManagerHook: package_info: PackageInfo{2bdff com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:28.417 29479 30629 I PATCH   : PackageManagerHook: package_info: PackageInfo{2bdff com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:28.491 29479 30629 I PATCH   : PackageManagerHook: package_info: PackageInfo{36c69b7 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:28.537 29479 30629 I PATCH   : PackageManagerHook: package_info: PackageInfo{6b9888d com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:28.599 29479 30629 I PATCH   : PackageManagerHook: package_info: PackageInfo{5523f90 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:28.610 29479 30629 I PATCH   : PackageManagerHook: package_info: PackageInfo{5523f90 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:28.641 29479 30629 I PATCH   : PackageManagerHook: package_info: PackageInfo{cc32089 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:28.665 29479 30629 I PATCH   : PackageManagerHook: package_info: PackageInfo{5f4c88e com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:28.678 29479 30629 I PATCH   : PackageManagerHook: package_info: PackageInfo{bc3c4bc com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:28.703 29479 30629 I PATCH   : PackageManagerHook: package_info: PackageInfo{db43c45 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:28.730 29479 30629 I PATCH   : PackageManagerHook: package_info: PackageInfo{278df9a com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:28.772 29479 30629 I PATCH   : PackageManagerHook: package_info: PackageInfo{278df9a com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:28.780 29479 30629 I PATCH   : PackageManagerHook: package_info: PackageInfo{278df9a com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:31.002 29479 29939 I PATCH   : PackageManagerHook: package_info: PackageInfo{d210f22 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:31.011 29479 29939 I PATCH   : PackageManagerHook: package_info: PackageInfo{d210f22 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:31.033 29479 29939 I PATCH   : PackageManagerHook: package_info: PackageInfo{d210f22 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:31.037 29479 29939 I PATCH   : PackageManagerHook: package_info: PackageInfo{d210f22 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:05:31.415 29479 29939 I PATCH   : PackageManagerHook: package_info: PackageInfo{705e739 com.whatsapp}, package_name: com.whatsapp, flags: 128
+08-06 19:05:32.324 29479 30822 I PATCH   : PackageManagerHook: package_info: PackageInfo{30b79db com.android.vending}, package_name: com.android.vending, flags: 64
+08-06 19:05:32.328 29479 30822 I PATCH   : PackageManagerHook: package_info: PackageInfo{30b79db com.android.vending}, package_name: com.android.vending, flags: 64
+08-06 19:05:32.341 29479 30822 I PATCH   : PackageManagerHook: package_info: PackageInfo{b8d23b6 com.whatsapp}, package_name: com.whatsapp, flags: 64
+08-06 19:05:32.341 29479 30822 I PATCH   : PackageManagerHook: Replacing package info...
+08-06 19:05:32.355 29479 30822 I PATCH   : PackageManagerHook: package_info: PackageInfo{bdd8b7 com.whatsapp}, package_name: com.whatsapp, flags: 4096
+08-06 19:05:34.469 29479 30813 I PATCH   : ViewOnceSaver: delete() media path: /data/user/0/com.whatsapp/cache/ProfilePictureTemp/1_596494081_3226110427547583_1520602710948948841_n.jpg
+08-06 19:05:38.295 29479 30582 I PATCH   : ViewOnceSaver: delete() media path: /data/user/0/com.whatsapp/files/me.jpg
+08-06 19:05:58.096 29479 30087 I PATCH   : PackageManagerHook: package_info: PackageInfo{4b63323 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:06:29.929 29479 29479 I PATCH   : PackageManagerHook: package_info: PackageInfo{4b63323 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:09:05.142 29479  2929 I PATCH   : PackageManagerHook: package_info: PackageInfo{5413a44 com.google.android.gms}, package_name: com.google.android.gms, flags: 0
+08-06 19:09:06.961 29479 29825 I PATCH   : PackageManagerHook: package_info: PackageInfo{d23a60f com.facebook.services}, package_name: com.facebook.services, flags: 134221824
+08-06 19:09:22.937 29479 29479 I PATCH   : PackageManagerHook: package_info: PackageInfo{6c142a4 com.whatsapp}, package_name: com.whatsapp, flags: 134217728
+08-06 19:09:22.937 29479 29479 I PATCH   : PackageManagerHook: Replacing package info...
+08-06 19:09:22.940 29479 29479 I PATCH   : PackageManagerHook: package_info: PackageInfo{6c142a4 com.whatsapp}, package_name: com.whatsapp, flags: 134217728
+08-06 19:09:22.940 29479 29479 I PATCH   : PackageManagerHook: Replacing package info...
+08-06 19:10:07.920 29479 29479 I PATCH   : PackageManagerHook: package_info: PackageInfo{6c142a4 com.whatsapp}, package_name: com.whatsapp, flags: 134217728
+08-06 19:10:07.920 29479 29479 I PATCH   : PackageManagerHook: Replacing package info...
+08-06 19:10:07.920 29479 29479 I PATCH   : PackageManagerHook: package_info: PackageInfo{6c142a4 com.whatsapp}, package_name: com.whatsapp, flags: 134217728
+08-06 19:10:07.920 29479 29479 I PATCH   : PackageManagerHook: Replacing package info...
+08-06 19:10:28.655 29479 29479 I PATCH   : PackageManagerHook: package_info: PackageInfo{4c9c0b9 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:10:31.241 29479 29479 I PATCH   : PackageManagerHook: package_info: PackageInfo{d0eb7e8 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:10:35.259 29479 29479 I PATCH   : PackageManagerHook: package_info: PackageInfo{d0eb7e8 com.whatsapp}, package_name: com.whatsapp, flags: 0
+08-06 19:10:41.684 29479  3384 I PATCH   : ViewOnceSaver: delete() media path: /storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Images/IMG-20260806-WA0000.jpeg
+08-06 19:10:42.513 29479  4192 I PATCH   : ViewOnceSaver: delete() media path: /data/user/0/com.whatsapp/files/.Shared/5e023df363094d37a2f2425323a4afe5.jpeg
+08-06 19:10:44.597 29479 30580 I PATCH   : ViewOnceSaver: delete() media path: /data/user/0/com.whatsapp/files/ViewOnce/IMG-20260806-WA0001.jpg
+08-06 19:10:49.201 29479 29479 I PATCH   : PackageManagerHook: package_info: PackageInfo{e449cdc com.whatsapp}, package_name: com.whatsapp, flags: 134217728
+08-06 19:10:49.201 29479 29479 I PATCH   : PackageManagerHook: Replacing package info...
+08-06 19:10:49.201 29479 29479 I PATCH   : PackageManagerHook: package_info: PackageInfo{e449cdc com.whatsapp}, package_name: com.whatsapp, flags: 134217728
+08-06 19:10:49.201 29479 29479 I PATCH   : PackageManagerHook: Replacing package info...
+08-06 19:10:54.769 29479 30580 E PATCH   : DeletedMessageSaver: query error: no such column: key_remote_jid (code 1 SQLITE_ERROR[1]): , while compiling: SELECT key_remote_jid, key_from_me, timestamp, data, media_name, media_url FROM message WHERE _id=? ORDER BY timestamp ASC

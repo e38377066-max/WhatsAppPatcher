@@ -116,8 +116,14 @@ public class ViewOnceSaver implements Hook {
         }
         String path = file.getAbsolutePath();
 
-        // Must be inside a "Private" directory (received) or a "Sent" directory (sent)
-        if (!path.contains("/Private/") && !path.contains("/Sent/")) {
+        // WhatsApp stores view-once media in a dedicated internal folder
+        //   /data/user/0/com.whatsapp/files/ViewOnce/<file>
+        // and, on some builds, under the classic "Private"/"Sent" media dirs.
+        // Match any of them (case-insensitive on the folder name).
+        String lp = path.toLowerCase(Locale.US);
+        if (!lp.contains("/viewonce/")
+                && !path.contains("/Private/")
+                && !path.contains("/Sent/")) {
             return false;
         }
 

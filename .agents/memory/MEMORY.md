@@ -1,0 +1,1 @@
+- [WhatsApp patch hook points](whatsapp-hook-points.md) — real device paths/schema: view-once lives in files/ViewOnce/, deletes go through File.delete + SQLite, message table uses from_me/text_data (no key_remote_jid).
