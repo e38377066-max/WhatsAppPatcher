@@ -145,11 +145,30 @@ def _patched_compile_apk(input_path, output_path):
             text = manifest.read_text(encoding='latin-1')
             enc = 'latin-1'
         original = text
+
+        # Remove attributes that mark this as a split APK bundle
         for pattern in _SPLIT_ATTRS:
             text = _re.sub(pattern, '', text)
         if text != original:
-            manifest.write_text(text, encoding=enc)
             print('[+] Removed split-APK attributes from AndroidManifest.xml')
+
+        # Flip extractNativeLibs to true.
+        # WhatsApp ships extractNativeLibs="false" which requires .so files to be
+        # page-aligned (4096 B) inside the APK. uber-apk-signer's zipalign only
+        # does 4-byte alignment, so Android 13+ rejects the APK at install time
+        # with "not compatible". Setting it to true makes Android extract the libs
+        # to /data/app/ on install, bypassing the page-alignment requirement.
+        patched = _re.sub(
+            r'android:extractNativeLibs="false"',
+            'android:extractNativeLibs="true"',
+            text,
+        )
+        if patched != text:
+            print('[+] Set extractNativeLibs=true (avoids page-alignment check)')
+            text = patched
+
+        if text != original:
+            manifest.write_text(text, encoding=enc)
     return _original_compile_apk(input_path, output_path)
 
 _stitch_stitch.compile_apk = _patched_compile_apk
@@ -197,7 +216,7 @@ def _merge_bundle_to_single_apk(bundle_zip_path: Path, temp_path: Path) -> None:
     # We only keep lib/arm64-v8a/ — including x86/x86_64 dirs without
     # libarthooks.so confuses Android's ABI picker on some devices.
     _SKIP_NAMES    = {'AndroidManifest.xml', 'resources.arsc'}
-    _SKIP_PREFIXES = ('META-INF/', 'lib/x86/', 'lib/x86_64/', 'lib/armeabi/')
+    _SKIP_PREFIXES = ('META-INF/', 'lib/x86/', 'lib/x86_64/', 'lib/armeabi/', 'lib/armeabi-v7a/')
 
     merged_path = merge_dir / 'merged_unsigned.apk'
 
