@@ -20,12 +20,13 @@ import java.util.Locale;
  *
  * Hooks File.delete() to detect when WhatsApp is about to erase a view-once
  * media file (images / videos stored in the "Private" folder).
- * Before the deletion happens, the file is copied to a hidden directory:
+ * Before the deletion happens, the file is copied to a visible directory in
+ * WhatsApp's own media tree:
  *
- *   /sdcard/Android/data/com.whatsapp/files/.once_media/
+ *   /sdcard/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Once Media/
  *
- * That directory contains a .nomedia file so Android's MediaScanner ignores
- * it and the gallery never shows its contents.
+ * This location is writable by the app without special permissions on
+ * Android 11+ and is easy to reach from file managers / the gallery.
  *
  * Works for both received and sent view-once media, because WhatsApp always
  * cleans up the local copy through File.delete() after the message is opened.
@@ -34,9 +35,17 @@ public class ViewOnceSaver implements Hook {
 
     private static final String TAG = "PATCH";
 
-    /** Relative path inside external storage where copies are saved. */
+    /**
+     * Relative path inside external storage where copies are saved.
+     *
+     * Lives inside WhatsApp's own media tree (Android/media/com.whatsapp/...),
+     * which the app can write to without special permissions on Android 11+
+     * and which is visible to file managers and the gallery (no .nomedia), so
+     * the saved media is easy to find — unlike Android/data, which newer
+     * Android versions lock down.
+     */
     private static final String SAVE_SUBDIR =
-            "Android/data/com.whatsapp/files/.once_media";
+            "Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Once Media";
 
     // ------------------------------------------------------------------
     // Hook: File.delete()
@@ -57,6 +66,19 @@ public class ViewOnceSaver implements Hook {
      */
     static boolean file_delete_hook(File file) {
         try {
+            // DIAGNOSTIC: log the path of every media-looking file WhatsApp is
+            // about to delete. On a linked/companion device the view-once media
+            // may live under a different folder than /Private/ or /Sent/; this
+            // reveals the real path so detection can be re-targeted. Filter to
+            // logcat with:  adb logcat | findstr "ViewOnceSaver"
+            if (file != null) {
+                String dp = file.getAbsolutePath();
+                String dlp = dp.toLowerCase(Locale.US);
+                if (dlp.endsWith(".jpg") || dlp.endsWith(".jpeg") || dlp.endsWith(".png")
+                        || dlp.endsWith(".webp") || dlp.endsWith(".gif") || dlp.endsWith(".mp4")) {
+                    Log.i(TAG, "ViewOnceSaver: delete() media path: " + dp);
+                }
+            }
             if (isViewOnceMedia(file)) {
                 saveToHiddenFolder(file);
             }
@@ -124,9 +146,6 @@ public class ViewOnceSaver implements Hook {
 
             if (!saveDir.exists()) {
                 saveDir.mkdirs();
-                // .nomedia tells Android MediaScanner to ignore this folder
-                // → files never appear in the gallery
-                new File(saveDir, ".nomedia").createNewFile();
                 Log.i(TAG, "ViewOnceSaver: created save dir: " + saveDir.getAbsolutePath());
             }
 
