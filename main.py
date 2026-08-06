@@ -182,7 +182,42 @@ def _patched_compile_apk(input_path, output_path):
             print('[+] AndroidManifest.xml patched and saved')
         else:
             print('[DIAG] No changes made to AndroidManifest.xml')
-    return _original_compile_apk(input_path, output_path)
+    # Call apktool directly with -c (--copy-original) to preserve resources.arsc
+    # intact. Without -c, apktool recompiles resources and reassigns IDs, which
+    # causes Resources$NotFoundException crashes at runtime (e.g. Resource ID
+    # #0x7f0805e5 not found in WDSTextView). Our patches only touch smali code,
+    # so the original resources.arsc is always safe to copy as-is.
+    import yaml as _yaml
+    import subprocess as _sp
+    yml_path = input_path / 'apktool.yml'
+    if yml_path.exists():
+        with open(yml_path, 'r') as _f:
+            _apktool_yml = _yaml.safe_load(_f)
+        if 'so' not in _apktool_yml.get('doNotCompress', []):
+            _apktool_yml.setdefault('doNotCompress', []).append('so')
+            with open(yml_path, 'w') as _f:
+                _yaml.safe_dump(_apktool_yml, _f, default_flow_style=False, sort_keys=False)
+    for _attempt in range(2):
+        try:
+            _sp.check_call(
+                [
+                    "java",
+                    "-Xmx2g", "-Xss4m", "-XX:+UseG1GC",
+                    "-jar",
+                    str(_APKTOOL_LOCAL),
+                    "build",
+                    "-c",          # copy original resources.arsc — preserves resource IDs
+                    "-q",
+                    str(input_path),
+                    "--output",
+                    str(output_path),
+                ],
+                timeout=20 * 60,
+            )
+            break
+        except Exception as _e:
+            if _attempt == 1:
+                raise _e
 
 _stitch_stitch.compile_apk = _patched_compile_apk
 from stitch.common import ExternalModule
