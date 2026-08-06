@@ -232,6 +232,58 @@ def _merge_bundle_to_single_apk(bundle_zip_path: Path, temp_path: Path) -> None:
 
     merged_path = merge_dir / 'merged_unsigned.apk'
 
+    # ---------------------------------------------------------------------------
+    # Binary manifest patcher — called AFTER the merged APK is assembled.
+    # The AndroidManifest.xml inside the APK is Android binary XML (AXML), not
+    # text. Our text-regex approach doesn't reach it. Instead we do a targeted
+    # in-place rename of known split-enforcement attribute names inside the AXML
+    # string pool (UTF-8 or UTF-16LE depending on the pool flag).
+    # Renaming "requiredSplitTypes" → "xequiredSplitTypes" (same byte-length)
+    # turns it into an unknown attribute Android silently ignores, removing the
+    # requirement that companion splits must be installed.
+    # ---------------------------------------------------------------------------
+    def _patch_axml_attrs(apk_path: Path) -> None:
+        # Attribute renames: original → replacement (must be same byte-length in
+        # both UTF-8 and UTF-16LE because we don't know which encoding the pool
+        # uses, so we try both).
+        _ATTR_RENAMES = {
+            'requiredSplitTypes': 'xequiredSplitTypes',   # 18 → 18 chars ✓
+            'splitTypes':         'xplitTypes',            # 10 → 10 chars ✓
+            'isSplitRequired':    'xsSplitRequired',       # 15 → 15 chars ✓
+            'featureSplit':       'xeatureSplit',          # 12 → 12 chars ✓
+            'splitName':          'xplitName',             # 9  → 9  chars ✓
+        }
+        with _zipfile.ZipFile(apk_path, 'r') as _z:
+            manifest_bytes = bytearray(_z.read('AndroidManifest.xml'))
+
+        changed = False
+        for orig, repl in _ATTR_RENAMES.items():
+            for enc in ('utf-8', 'utf-16-le'):
+                ob, rb = orig.encode(enc), repl.encode(enc)
+                if len(ob) != len(rb):
+                    continue
+                idx = manifest_bytes.find(ob)
+                if idx != -1:
+                    manifest_bytes[idx:idx+len(ob)] = rb
+                    print(f'[+] Binary manifest ({enc}): {orig!r} → unknown attr')
+                    changed = True
+                    break   # found in this encoding, don't try the other
+
+        if not changed:
+            print('[DIAG] Binary manifest: no split-enforcement attrs found')
+            return
+
+        # Rewrite the APK replacing only AndroidManifest.xml
+        _tmp = apk_path.with_suffix('._tmp.apk')
+        with _zipfile.ZipFile(apk_path, 'r') as _src:
+            with _zipfile.ZipFile(_tmp, 'w') as _dst:
+                for _info in _src.infolist():
+                    _data = bytes(manifest_bytes) if _info.filename == 'AndroidManifest.xml' \
+                            else _src.read(_info.filename)
+                    _dst.writestr(_info, _data)
+        _tmp.replace(apk_path)
+        print('[+] APK rewritten with patched binary manifest')
+
     with _zipfile.ZipFile(base_apk, 'r') as base_z:
         existing = set(base_z.namelist())
         with _zipfile.ZipFile(merged_path, 'w', _zipfile.ZIP_DEFLATED) as out_z:
@@ -253,7 +305,10 @@ def _merge_bundle_to_single_apk(bundle_zip_path: Path, temp_path: Path) -> None:
                             out_z.writestr(info, sp_z.read(name))
                             existing.add(name)
 
-    # 2. Page-align .so files to 4096-byte boundaries BEFORE signing.
+    # 2. Patch split-enforcement attributes in the binary AndroidManifest.xml.
+    _patch_axml_attrs(merged_path)
+
+    # 3. Page-align .so files to 4096-byte boundaries BEFORE signing.
     #    extractNativeLibs="false" (WhatsApp default) makes Android load .so files
     #    directly from the APK — they MUST be page-aligned or Android 13+ rejects
     #    the install. uber-apk-signer only does 4-byte alignment, so we run

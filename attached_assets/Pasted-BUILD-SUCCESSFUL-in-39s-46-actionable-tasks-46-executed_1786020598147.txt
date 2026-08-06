@@ -1,0 +1,432 @@
+BUILD SUCCESSFUL in 39s
+46 actionable tasks: 46 executed
+ [+] Extracting the smali...
+[+] Injecting the custom so...
+[+] Adding calls to the custom smali...
+[+] Searching for activities with entry points...
+[+] Found 192 activities with entry points
+[-] Failed to find smali file for com.google.android.gms.metadata.ModuleDependencies
+[+] Compiling APK...
+[DIAG] AndroidManifest.xml (decoded, first 15 lines):
+ 8[
+  Èq
+  (4^v¸Êâ$LrºÔê(@f¬ÀÔä"Hh ºäú
+  <VpÂì*Lf¨Èø
+  D\~¦Úü*VvÒ R  H       `                       ¤       ®       Ì       à       ô
+
+  8
+  \
+  ª
+
+  0
+  R
+  f
+  n
+
+[DIAG] extractNativeLibs="false" not found in decoded XML
+[DIAG] No changes made to AndroidManifest.xml
+Exception in thread "main" java.lang.RuntimeException: java.util.concurrent.ExecutionException: java.lang.OutOfMemoryError: Java heap space
+        at brut.androlib.ApkBuilder.build(SourceFile:0)
+        at brut.apktool.Main.main(SourceFile:0)
+Caused by: java.util.concurrent.ExecutionException: java.lang.OutOfMemoryError: Java heap space
+        at java.base/java.util.concurrent.FutureTask.report(FutureTask.java:122)
+        at java.base/java.util.concurrent.FutureTask.get(FutureTask.java:191)
+        ... 2 more
+Caused by: java.lang.OutOfMemoryError: Java heap space
+[+] Signing APK...
+[+] Using zipalign: C:\Users\AB\AppData\Local\Android\Sdk\build-tools\37.0.0\zipalign.exe
+source:
+        C:\Trabajo\WhatsAppPatcher\temp
+zipalign location: CUSTOM
+        C:\Users\AB\AppData\Local\Android\Sdk\build-tools\37.0.0\zipalign.exe
+keystore:
+        [0] 36ff6227 C:\Users\AB\.android\debug.keystore (DEBUG_ANDROID_FOLDER)
+
+01. unsigned.apk
+
+        SIGN
+        file: C:\Trabajo\WhatsAppPatcher\temp\unsigned.apk (130.94 MiB)
+        checksum: 3e5fab6f929365092144c181f5a989f8d7de077ffe723624707a9683fb012f2 (sha256)
+        - zipalign success
+        - sign success
+
+        VERIFY
+        file: C:\Trabajo\WhatsAppPatcher\temp\unsigned-aligned-debugSigned.apk (131.6 MiB)
+        checksum: a4a05f34b1bff710f9893b0ee76d32f58bfcd9d80ccf3285e2d79495d7907081 (sha256)
+        - zipalign verified
+        - signature verified [v1, v2, v3]
+                3 warnings
+                Subject: C=US, O=Android, CN=Android Debug
+                SHA256: f14192f9b8fb0d87e5361b187bb9c641149c8a146114be3495f5be2fccbe6496 / SHA256withRSA
+                Expires: Sat May 20 00:04:54 CDT 2056
+
+[Thu Aug 06 08:43:12 CDT 2026][v1.2.1]
+Successfully processed 1 APKs and 0 errors in 10.34 seconds.
+[+] Using zipalign: C:\Users\AB\AppData\Local\Android\Sdk\build-tools\37.0.0\zipalign.exe
+source:
+        C:\Trabajo\WhatsAppPatcher\temp\bundle
+zipalign location: CUSTOM
+        C:\Users\AB\AppData\Local\Android\Sdk\build-tools\37.0.0\zipalign.exe
+keystore:
+        [0] 36ff6227 C:\Users\AB\.android\debug.keystore (DEBUG_ANDROID_FOLDER)
+
+01. base.apk
+
+        SIGN
+        file: C:\Trabajo\WhatsAppPatcher\temp\bundle\base.apk (115.15 MiB)
+        checksum: 1dead5bf7447adf77e8a4923807616a4d354e35988921fe01a3dca1b51228397 (sha256)
+        - zipalign success
+        - sign success
+
+        VERIFY
+        file: C:\Trabajo\WhatsAppPatcher\temp\bundle\base-aligned-debugSigned.apk (115.14 MiB)
+        checksum: 51dc494f35cb2876b0bd856047c98dac1c5ff3d5d2658eb20a053e51e4fcf31c (sha256)
+        - zipalign verified
+        - signature verified [v1, v2, v3]
+                5 warnings
+                Subject: C=US, O=Android, CN=Android Debug
+                SHA256: f14192f9b8fb0d87e5361b187bb9c641149c8a146114be3495f5be2fccbe6496 / SHA256withRSA
+                Expires: Sat May 20 00:04:54 CDT 2056
+
+[Thu Aug 06 08:43:22 CDT 2026][v1.2.1]
+Successfully processed 1 APKs and 0 errors in 9.23 seconds.
+[+] Using zipalign: C:\Users\AB\AppData\Local\Android\Sdk\build-tools\37.0.0\zipalign.exe
+source:
+        C:\Trabajo\WhatsAppPatcher\temp\bundle
+zipalign location: CUSTOM
+        C:\Users\AB\AppData\Local\Android\Sdk\build-tools\37.0.0\zipalign.exe
+keystore:
+        [0] 36ff6227 C:\Users\AB\.android\debug.keystore (DEBUG_ANDROID_FOLDER)
+
+01. split_config.arm64_v8a.apk
+
+        SIGN
+        file: C:\Trabajo\WhatsAppPatcher\temp\bundle\split_config.arm64_v8a.apk (12.88 MiB)
+        checksum: db52154278b7b6d5b1aa0d5a38547370fc33cddb72489cd4ac7f928609e3574d (sha256)
+        - zipalign success
+        - sign success
+
+        VERIFY
+        file: C:\Trabajo\WhatsAppPatcher\temp\bundle\split_config.arm64_v8a-aligned-debugSigned.apk (12.88 MiB)
+        checksum: 34d7586a039e51441d5ab0209ae07ff8c23c1b0f5eebbbd9cde19f78a6d5331e (sha256)
+        - zipalign verified
+        - signature verified [v1, v2, v3]
+                Subject: C=US, O=Android, CN=Android Debug
+                SHA256: f14192f9b8fb0d87e5361b187bb9c641149c8a146114be3495f5be2fccbe6496 / SHA256withRSA
+                Expires: Sat May 20 00:04:54 CDT 2056
+
+[Thu Aug 06 08:43:23 CDT 2026][v1.2.1]
+Successfully processed 1 APKs and 0 errors in 1.15 seconds.
+[+] Using zipalign: C:\Users\AB\AppData\Local\Android\Sdk\build-tools\37.0.0\zipalign.exe
+source:
+        C:\Trabajo\WhatsAppPatcher\temp\bundle
+zipalign location: CUSTOM
+        C:\Users\AB\AppData\Local\Android\Sdk\build-tools\37.0.0\zipalign.exe
+keystore:
+        [0] 36ff6227 C:\Users\AB\.android\debug.keystore (DEBUG_ANDROID_FOLDER)
+
+01. split_config.armeabi_v7a.apk
+
+        SIGN
+        file: C:\Trabajo\WhatsAppPatcher\temp\bundle\split_config.armeabi_v7a.apk (14.04 MiB)
+        checksum: ad94459bc52a64972ca97ccaa0526a1d3741c9990da0c729e52c2f63525f445 (sha256)
+        - zipalign success
+        - sign success
+
+        VERIFY
+        file: C:\Trabajo\WhatsAppPatcher\temp\bundle\split_config.armeabi_v7a-aligned-debugSigned.apk (14.03 MiB)
+        checksum: d4834642ac98bd0e90e1ad0e18ed3f436708e33243b58e1857eda3e00d20ee05 (sha256)
+        - zipalign verified
+        - signature verified [v1, v2, v3]
+                Subject: C=US, O=Android, CN=Android Debug
+                SHA256: f14192f9b8fb0d87e5361b187bb9c641149c8a146114be3495f5be2fccbe6496 / SHA256withRSA
+                Expires: Sat May 20 00:04:54 CDT 2056
+
+[Thu Aug 06 08:43:25 CDT 2026][v1.2.1]
+Successfully processed 1 APKs and 0 errors in 1.16 seconds.
+[+] Using zipalign: C:\Users\AB\AppData\Local\Android\Sdk\build-tools\37.0.0\zipalign.exe
+source:
+        C:\Trabajo\WhatsAppPatcher\temp\bundle
+zipalign location: CUSTOM
+        C:\Users\AB\AppData\Local\Android\Sdk\build-tools\37.0.0\zipalign.exe
+keystore:
+        [0] 36ff6227 C:\Users\AB\.android\debug.keystore (DEBUG_ANDROID_FOLDER)
+
+01. split_config.hdpi.apk
+
+        SIGN
+        file: C:\Trabajo\WhatsAppPatcher\temp\bundle\split_config.hdpi.apk (1.36 MiB)
+        checksum: d5aafd8256e1b19cb8a494923d8756999cfdb4788f252a7c59e59ff677b337d (sha256)
+        - zipalign success
+        - sign success
+
+        VERIFY
+        file: C:\Trabajo\WhatsAppPatcher\temp\bundle\split_config.hdpi-aligned-debugSigned.apk (1.36 MiB)
+        checksum: 527d8df1b90eb0a8997c6b4fa7d7026d754815d79d84ed6ac12518152f2be9d8 (sha256)
+        - zipalign verified
+        - signature verified [v1, v2, v3]
+                Subject: C=US, O=Android, CN=Android Debug
+                SHA256: f14192f9b8fb0d87e5361b187bb9c641149c8a146114be3495f5be2fccbe6496 / SHA256withRSA
+                Expires: Sat May 20 00:04:54 CDT 2056
+
+[Thu Aug 06 08:43:26 CDT 2026][v1.2.1]
+Successfully processed 1 APKs and 0 errors in 0.95 seconds.
+[+] Using zipalign: C:\Users\AB\AppData\Local\Android\Sdk\build-tools\37.0.0\zipalign.exe
+source:
+        C:\Trabajo\WhatsAppPatcher\temp\bundle
+zipalign location: CUSTOM
+        C:\Users\AB\AppData\Local\Android\Sdk\build-tools\37.0.0\zipalign.exe
+keystore:
+        [0] 36ff6227 C:\Users\AB\.android\debug.keystore (DEBUG_ANDROID_FOLDER)
+
+01. split_config.ldpi.apk
+
+        SIGN
+        file: C:\Trabajo\WhatsAppPatcher\temp\bundle\split_config.ldpi.apk (1.12 MiB)
+        checksum: 6ffa875a695eafc598a3a6ea9d10ad3f77523288b77204c2e5fce724ccbcea8a (sha256)
+        - zipalign success
+        - sign success
+
+        VERIFY
+        file: C:\Trabajo\WhatsAppPatcher\temp\bundle\split_config.ldpi-aligned-debugSigned.apk (1.11 MiB)
+        checksum: b35a15d2cfb685b10fd0a7078e933ccb7f3eb0de40b8f64bac9b664247fba481 (sha256)
+        - zipalign verified
+        - signature verified [v1, v2, v3]
+                Subject: C=US, O=Android, CN=Android Debug
+                SHA256: f14192f9b8fb0d87e5361b187bb9c641149c8a146114be3495f5be2fccbe6496 / SHA256withRSA
+                Expires: Sat May 20 00:04:54 CDT 2056
+
+[Thu Aug 06 08:43:27 CDT 2026][v1.2.1]
+Successfully processed 1 APKs and 0 errors in 0.99 seconds.
+[+] Using zipalign: C:\Users\AB\AppData\Local\Android\Sdk\build-tools\37.0.0\zipalign.exe
+source:
+        C:\Trabajo\WhatsAppPatcher\temp\bundle
+zipalign location: CUSTOM
+        C:\Users\AB\AppData\Local\Android\Sdk\build-tools\37.0.0\zipalign.exe
+keystore:
+        [0] 36ff6227 C:\Users\AB\.android\debug.keystore (DEBUG_ANDROID_FOLDER)
+
+01. split_config.mdpi.apk
+
+        SIGN
+        file: C:\Trabajo\WhatsAppPatcher\temp\bundle\split_config.mdpi.apk (1.23 MiB)
+        checksum: 12714baff1040031d71a9d28740ebebfff591858ecafd790140365e9258be9bd (sha256)
+        - zipalign success
+        - sign success
+
+        VERIFY
+        file: C:\Trabajo\WhatsAppPatcher\temp\bundle\split_config.mdpi-aligned-debugSigned.apk (1.22 MiB)
+        checksum: 5b844e70a0f6926d840b982f87db0100e73d9000627fd02865e3ef37bd832974 (sha256)
+        - zipalign verified
+        - signature verified [v1, v2, v3]
+                Subject: C=US, O=Android, CN=Android Debug
+                SHA256: f14192f9b8fb0d87e5361b187bb9c641149c8a146114be3495f5be2fccbe6496 / SHA256withRSA
+                Expires: Sat May 20 00:04:54 CDT 2056
+
+[Thu Aug 06 08:43:29 CDT 2026][v1.2.1]
+Successfully processed 1 APKs and 0 errors in 1.03 seconds.
+[+] Using zipalign: C:\Users\AB\AppData\Local\Android\Sdk\build-tools\37.0.0\zipalign.exe
+source:
+        C:\Trabajo\WhatsAppPatcher\temp\bundle
+zipalign location: CUSTOM
+        C:\Users\AB\AppData\Local\Android\Sdk\build-tools\37.0.0\zipalign.exe
+keystore:
+        [0] 36ff6227 C:\Users\AB\.android\debug.keystore (DEBUG_ANDROID_FOLDER)
+
+01. split_config.tvdpi.apk
+
+        SIGN
+        file: C:\Trabajo\WhatsAppPatcher\temp\bundle\split_config.tvdpi.apk (2.18 MiB)
+        checksum: 4d4ff4beadb88c3dfbae66551074b3d1874db12727da0dc0ef736a450a5ab2bb (sha256)
+        - zipalign success
+        - sign success
+
+        VERIFY
+        file: C:\Trabajo\WhatsAppPatcher\temp\bundle\split_config.tvdpi-aligned-debugSigned.apk (2.17 MiB)
+        checksum: 5a6508dc03a11ee32d311793ad2df742b5560e6e0b8033b4c9a85b98be9d03cd (sha256)
+        - zipalign verified
+        - signature verified [v1, v2, v3]
+                Subject: C=US, O=Android, CN=Android Debug
+                SHA256: f14192f9b8fb0d87e5361b187bb9c641149c8a146114be3495f5be2fccbe6496 / SHA256withRSA
+                Expires: Sat May 20 00:04:54 CDT 2056
+
+[Thu Aug 06 08:43:30 CDT 2026][v1.2.1]
+Successfully processed 1 APKs and 0 errors in 1.17 seconds.
+[+] Using zipalign: C:\Users\AB\AppData\Local\Android\Sdk\build-tools\37.0.0\zipalign.exe
+source:
+        C:\Trabajo\WhatsAppPatcher\temp\bundle
+zipalign location: CUSTOM
+        C:\Users\AB\AppData\Local\Android\Sdk\build-tools\37.0.0\zipalign.exe
+keystore:
+        [0] 36ff6227 C:\Users\AB\.android\debug.keystore (DEBUG_ANDROID_FOLDER)
+
+01. split_config.x86.apk
+
+        SIGN
+        file: C:\Trabajo\WhatsAppPatcher\temp\bundle\split_config.x86.apk (16.9 MiB)
+        checksum: 56ae8e200dd8839948593a4c4eb5ea03753608b8097098c96388ffccb0ec0909 (sha256)
+        - zipalign success
+        - sign success
+
+        VERIFY
+        file: C:\Trabajo\WhatsAppPatcher\temp\bundle\split_config.x86-aligned-debugSigned.apk (16.89 MiB)
+        checksum: 1bfebe266863f3cb6bbce943b7bfa7adc064810fdfe2a7a2184ce75a706d9896 (sha256)
+        - zipalign verified
+        - signature verified [v1, v2, v3]
+                Subject: C=US, O=Android, CN=Android Debug
+                SHA256: f14192f9b8fb0d87e5361b187bb9c641149c8a146114be3495f5be2fccbe6496 / SHA256withRSA
+                Expires: Sat May 20 00:04:54 CDT 2056
+
+[Thu Aug 06 08:43:32 CDT 2026][v1.2.1]
+Successfully processed 1 APKs and 0 errors in 1.31 seconds.
+[+] Using zipalign: C:\Users\AB\AppData\Local\Android\Sdk\build-tools\37.0.0\zipalign.exe
+source:
+        C:\Trabajo\WhatsAppPatcher\temp\bundle
+zipalign location: CUSTOM
+        C:\Users\AB\AppData\Local\Android\Sdk\build-tools\37.0.0\zipalign.exe
+keystore:
+        [0] 36ff6227 C:\Users\AB\.android\debug.keystore (DEBUG_ANDROID_FOLDER)
+
+01. split_config.x86_64.apk
+
+        SIGN
+        file: C:\Trabajo\WhatsAppPatcher\temp\bundle\split_config.x86_64.apk (14.96 MiB)
+        checksum: 18a87bad14a40299f6c152449c5d0a3f0eda1a155bf087f09be48ebdee84372f (sha256)
+        - zipalign success
+        - sign success
+
+        VERIFY
+        file: C:\Trabajo\WhatsAppPatcher\temp\bundle\split_config.x86_64-aligned-debugSigned.apk (14.95 MiB)
+        checksum: fd68495015a79689afa3f64277e856a9cb83a6f2a0d970509e446afcefb00665 (sha256)
+        - zipalign verified
+        - signature verified [v1, v2, v3]
+                Subject: C=US, O=Android, CN=Android Debug
+                SHA256: f14192f9b8fb0d87e5361b187bb9c641149c8a146114be3495f5be2fccbe6496 / SHA256withRSA
+                Expires: Sat May 20 00:04:54 CDT 2056
+
+[Thu Aug 06 08:43:33 CDT 2026][v1.2.1]
+Successfully processed 1 APKs and 0 errors in 1.22 seconds.
+[+] Using zipalign: C:\Users\AB\AppData\Local\Android\Sdk\build-tools\37.0.0\zipalign.exe
+source:
+        C:\Trabajo\WhatsAppPatcher\temp\bundle
+zipalign location: CUSTOM
+        C:\Users\AB\AppData\Local\Android\Sdk\build-tools\37.0.0\zipalign.exe
+keystore:
+        [0] 36ff6227 C:\Users\AB\.android\debug.keystore (DEBUG_ANDROID_FOLDER)
+
+01. split_config.xhdpi.apk
+
+        SIGN
+        file: C:\Trabajo\WhatsAppPatcher\temp\bundle\split_config.xhdpi.apk (2.14 MiB)
+        checksum: def34620b6f0bab596c95d54991a569b0c2480dff7269d0bb2dad163c4d400a5 (sha256)
+        - zipalign success
+        - sign success
+
+        VERIFY
+        file: C:\Trabajo\WhatsAppPatcher\temp\bundle\split_config.xhdpi-aligned-debugSigned.apk (2.13 MiB)
+        checksum: db12dc93ce3707c5f751e68571fb8c0271d313c64dc5e73d16a74577abbb3ec9 (sha256)
+        - zipalign verified
+        - signature verified [v1, v2, v3]
+                Subject: C=US, O=Android, CN=Android Debug
+                SHA256: f14192f9b8fb0d87e5361b187bb9c641149c8a146114be3495f5be2fccbe6496 / SHA256withRSA
+                Expires: Sat May 20 00:04:54 CDT 2056
+
+[Thu Aug 06 08:43:35 CDT 2026][v1.2.1]
+Successfully processed 1 APKs and 0 errors in 1.07 seconds.
+[+] Using zipalign: C:\Users\AB\AppData\Local\Android\Sdk\build-tools\37.0.0\zipalign.exe
+source:
+        C:\Trabajo\WhatsAppPatcher\temp\bundle
+zipalign location: CUSTOM
+        C:\Users\AB\AppData\Local\Android\Sdk\build-tools\37.0.0\zipalign.exe
+keystore:
+        [0] 36ff6227 C:\Users\AB\.android\debug.keystore (DEBUG_ANDROID_FOLDER)
+
+01. split_config.xxhdpi.apk
+
+        SIGN
+        file: C:\Trabajo\WhatsAppPatcher\temp\bundle\split_config.xxhdpi.apk (2.23 MiB)
+        checksum: 6f416eca7aa57750343f41380f42b66d411e1d5dc01956521845f83a65db1cf0 (sha256)
+        - zipalign success
+        - sign success
+
+        VERIFY
+        file: C:\Trabajo\WhatsAppPatcher\temp\bundle\split_config.xxhdpi-aligned-debugSigned.apk (2.22 MiB)
+        checksum: 9bc24e271574ee4cfe9bb9b745ab7234baaf084b2da941820170a9b6642ccc1 (sha256)
+        - zipalign verified
+        - signature verified [v1, v2, v3]
+                Subject: C=US, O=Android, CN=Android Debug
+                SHA256: f14192f9b8fb0d87e5361b187bb9c641149c8a146114be3495f5be2fccbe6496 / SHA256withRSA
+                Expires: Sat May 20 00:04:54 CDT 2056
+
+[Thu Aug 06 08:43:36 CDT 2026][v1.2.1]
+Successfully processed 1 APKs and 0 errors in 1.10 seconds.
+[+] Using zipalign: C:\Users\AB\AppData\Local\Android\Sdk\build-tools\37.0.0\zipalign.exe
+source:
+        C:\Trabajo\WhatsAppPatcher\temp\bundle
+zipalign location: CUSTOM
+        C:\Users\AB\AppData\Local\Android\Sdk\build-tools\37.0.0\zipalign.exe
+keystore:
+        [0] 36ff6227 C:\Users\AB\.android\debug.keystore (DEBUG_ANDROID_FOLDER)
+
+01. split_i18n_en.apk
+
+        SIGN
+        file: C:\Trabajo\WhatsAppPatcher\temp\bundle\split_i18n_en.apk (0.02 MiB)
+        checksum: 534638c067c7ac38d328db6d4753ce010e5d2d960a2f8797f3f4ea8bd2751f5a (sha256)
+        - zipalign success
+        - sign success
+
+        VERIFY
+        file: C:\Trabajo\WhatsAppPatcher\temp\bundle\split_i18n_en-aligned-debugSigned.apk (0.01 MiB)
+        checksum: 9100259be3c36784bcc0dbc6763f470eba87dcd58c11226880337284458a97c9 (sha256)
+        - zipalign verified
+        - signature verified [v1, v2, v3]
+                Subject: C=US, O=Android, CN=Android Debug
+                SHA256: f14192f9b8fb0d87e5361b187bb9c641149c8a146114be3495f5be2fccbe6496 / SHA256withRSA
+                Expires: Sat May 20 00:04:54 CDT 2056
+
+[Thu Aug 06 08:43:37 CDT 2026][v1.2.1]
+Successfully processed 1 APKs and 0 errors in 0.62 seconds.
+[+] Cleaning up...
+[+] Merging 11 splits into base.apk...
+[+]   Adding from split_config.arm64_v8a.apk
+[+]   Adding from split_config.armeabi_v7a.apk
+[+]   Adding from split_config.hdpi.apk
+[+]   Adding from split_config.ldpi.apk
+[+]   Adding from split_config.mdpi.apk
+[+]   Adding from split_config.tvdpi.apk
+[+]   Adding from split_config.x86.apk
+[+]   Adding from split_config.x86_64.apk
+[+]   Adding from split_config.xhdpi.apk
+[+]   Adding from split_config.xxhdpi.apk
+[+]   Adding from split_i18n_en.apk
+[+] Page-aligning .so files (zipalign -p)...
+[+] Page-alignment done ✓
+[+] Signing merged APK...
+[+] Using zipalign: C:\Users\AB\AppData\Local\Android\Sdk\build-tools\37.0.0\zipalign.exe
+source:
+        C:\Trabajo\WhatsAppPatcher\temp\_merge_splits
+keystore:
+        [0] 36ff6227 C:\Users\AB\.android\debug.keystore (DEBUG_ANDROID_FOLDER)
+
+01. merged_aligned.apk
+
+        SIGN
+        file: C:\Trabajo\WhatsAppPatcher\temp\_merge_splits\merged_aligned.apk (149.79 MiB)
+        checksum: b3d7cea99aceddb409de9bfd7ec29a0a093672719d92017fc0a9c6eb121409fe (sha256)
+        - sign success
+
+        VERIFY
+        file: C:\Trabajo\WhatsAppPatcher\temp\_merge_splits\merged_aligned-debugSigned.apk (150.16 MiB)
+        checksum: e2e60173c477db1a607c308495d963ad32f6efa646222c8315bfebf54178f86c (sha256)
+        - signature verified [v1, v2, v3]
+                3 warnings
+                Subject: C=US, O=Android, CN=Android Debug
+                SHA256: f14192f9b8fb0d87e5361b187bb9c641149c8a146114be3495f5be2fccbe6496 / SHA256withRSA
+                Expires: Sat May 20 00:04:54 CDT 2056
+
+[Thu Aug 06 08:45:02 CDT 2026][v1.2.1]
+Successfully processed 1 APKs and 0 errors in 10.67 seconds.
+[+] Single APK ready: PatchedWhatsApp.apk
+
+C:\Trabajo\WhatsAppPatcher>
