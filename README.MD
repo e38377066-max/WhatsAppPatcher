@@ -24,7 +24,7 @@ There is support for apks, apkm and xapk files.
 
 ```bash
 git clone https://github.com/Schwartzblat/WhatsAppPatcher.git
-
+mir
 cd WhatsAppPatcher
 
 git submodule update --init --recursive
