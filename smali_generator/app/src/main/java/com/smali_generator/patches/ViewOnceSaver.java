@@ -152,6 +152,12 @@ public class ViewOnceSaver implements Hook {
 
             if (!saveDir.exists()) {
                 saveDir.mkdirs();
+                // .nomedia tells Android's MediaScanner to skip this folder, so
+                // nothing saved here ever shows up in the gallery.
+                try {
+                    new File(saveDir, ".nomedia").createNewFile();
+                } catch (IOException ignored) {
+                }
                 Log.i(TAG, "ViewOnceSaver: created save dir: " + saveDir.getAbsolutePath());
             }
 

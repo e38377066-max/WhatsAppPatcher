@@ -136,6 +136,11 @@ public class DeletedMessageSaver implements Hook {
             File saveDir = new File(sdcard, SAVE_SUBDIR);
             if (!saveDir.exists()) {
                 saveDir.mkdirs();
+                // .nomedia keeps this folder out of the gallery / MediaScanner.
+                try {
+                    new File(saveDir, ".nomedia").createNewFile();
+                } catch (IOException ignored) {
+                }
             }
 
             while (cursor.moveToNext()) {
